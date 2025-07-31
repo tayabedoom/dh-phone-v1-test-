@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DH Phone | Premium Mobile Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js?v=2" defer></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#2563eb', // blue-600
+                            dark: '#0ea5e9',  // sky-500
+                        },
+                        dark: {
+                            800: '#1e293b', // slate-800
+                            900: '#0f172a', // slate-900
+                        }
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+    </style>
+</head>
+<body class="bg-white text-slate-800 dark:bg-dark-900 dark:text-slate-100 transition-colors duration-300">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 header-glass shadow-sm animate-slide-down">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-12 md:h-16 items-center">
+            <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+            <a href="index.html" class="flex items-center space-x-2 logo-link" style="direction: ltr;">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-lg md:text-xl">DH</span>
+                </div>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 bg-clip-text text-transparent" data-en="Phone" data-fr="Téléphone" data-ar="Phone">Phone</span>
+                    </a>
+                </div>
+                <!-- Right side - Navigation and Controls -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <!-- Navigation Links -->
+                    <div class="flex items-center space-x-8" style="direction: ltr;">
+                        <a href="index.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline active" data-en="Home" data-fr="Accueil" data-ar="الصفحة الرئيسية">Home</a>
+                        <a href="porduct.html" class="text-primary-600 dark:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
+                        <a href="Contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+                    </div>
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <button id="language-toggle" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
+                            <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
+                            <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
+                            <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
+                            <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
+                        </div>
+                    </div>
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ml-8">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <button id="theme-toggle-mobile" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
+                <!-- Mobile menu header with close button -->
+                <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+                    <span class="text-lg font-bold text-gray-800 dark:text-gray-200">Menu</span>
+                    <button id="mobile-menu-close" class="text-2xl text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 focus:outline-none">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Navigation links -->
+                <div style="direction: ltr;">
+                <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
+                <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
+                <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+                </div>
+                
+                <!-- Language Selector Mobile -->
+                <div class="flex items-center px-3 py-2 space-x-4">
+                    <div class="relative">
+                        <button id="language-toggle-mobile" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
+                            <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
+                            <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
+                            <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
+                            <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-8 md:py-16 lg:py-24">
+        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-8 md:mb-0 animate-fade-in">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-4 md:mb-6" data-en="Your Trusted Phone Shop" data-fr="Votre Magasin de Téléphones de Confiance" data-ar="متجر الهواتف الموثوق">Your Trusted Phone Shop</h1>
+                <p class="text-base md:text-lg lg:text-xl text-slate-600 dark:text-slate-300 mb-6 md:mb-8 max-w-lg" data-en="Discover the best phones and mobile accessories at DH Phone. Quality products, competitive prices, and excellent service for all your mobile needs." data-fr="Découvrez les meilleurs téléphones et accessoires mobiles chez DH Phone. Produits de qualité, prix compétitifs et service excellent pour tous vos besoins mobiles." data-ar="اكتشف أفضل الهواتف وملحقاتها في متجر DH Phone. منتجات عالية الجودة وأسعار تنافسية وخدمة ممتازة لجميع احتياجاتك من الهواتف.">Discover the best phones and mobile accessories at DH Phone. Quality products, competitive prices, and excellent service for all your mobile needs.</p>
+                <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                    <a href="porduct.html" class="px-6 md:px-8 py-3 bg-primary-light dark:bg-primary-dark text-white rounded-full font-medium hover:bg-blue-700 dark:hover:bg-cyan-600 transition shadow-lg hover:shadow-xl text-center btn-animated" data-en="Explore Now" data-fr="Explorer" data-ar="استكشف الآن">
+                        Explore Now
+                    </a>
+                    <a href="learn-more.html" class="px-6 md:px-8 py-3 border border-slate-300 dark:border-slate-600 rounded-full font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition text-center btn-animated">
+                        <span data-en="Learn More" data-fr="En savoir plus" data-ar="معرفة المزيد">Learn More</span>
+                    </a>
+                </div>
+            </div>
+            <div class="md:w-1/2 flex justify-center animate-slide-up">
+                <div class="phone-mockup relative">
+                    <div class="phone-screen bg-white dark:bg-slate-800 rounded-[30px] md:rounded-[40px] p-2 w-48 md:w-64 h-[400px] md:h-[500px] border-6 md:border-8 border-slate-900 dark:border-slate-700">
+                        <div class="h-full rounded-[24px] md:rounded-[32px] overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-900 flex items-center justify-center">
+                            <div class="text-center p-4 md:p-6">
+                                <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center mx-auto mb-3 md:mb-4">
+                                    <span class="text-white text-lg md:text-2xl font-bold">DH</span>
+                                </div>
+                                <h3 class="text-lg md:text-xl font-bold mb-2" data-en="DH Phone" data-fr="DH Phone" data-ar="DH Phone">DH Phone</h3>
+                                <p class="text-xs md:text-sm opacity-80" data-en="Your phone shop" data-fr="Votre magasin de téléphones" data-ar="متجرك للهواتف">Your phone shop</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-8 md:py-16 bg-slate-50 dark:bg-dark-800">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-8 md:mb-16">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4" data-en="Our Latest Products" data-fr="Nos Derniers Produits" data-ar="أحدث منتجاتنا">Our Latest Products</h2>
+                <p class="text-sm md:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto" data-en="Discover our latest collection of phones and mobile accessories" data-fr="Découvrez notre dernière collection de téléphones et accessoires mobiles" data-ar="اكتشف أحدث مجموعة من الهواتف وملحقاتها">Discover our latest collection of phones and mobile accessories</p>
+            </div>
+            
+            <div id="shopify-products-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                <!-- Loading placeholder -->
+                <div class="col-span-full text-center py-8 md:py-12">
+                    <div class="inline-block animate-spin rounded-full h-6 w-6 md:h-8 md:w-8 border-b-2 border-primary-light dark:border-primary-dark"></div>
+                    <p class="mt-3 md:mt-4 text-sm md:text-base text-slate-600 dark:text-slate-300">Loading products...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- CTA Section -->
+    <section class="py-8 md:py-16 bg-gradient-to-r from-primary-light to-blue-600 dark:from-primary-dark dark:to-cyan-600 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-4" data-en="Ready to Shop?" data-fr="Prêt à acheter?" data-ar="هل أنت مستعد للتسوق؟">Ready to Shop?</h2>
+            <p class="text-sm md:text-base text-blue-100 dark:text-cyan-100 max-w-2xl mx-auto mb-6 md:mb-8" data-en="Visit our store for the best deals on phones and accessories" data-fr="Visitez notre magasin pour les meilleures offres sur les téléphones et accessoires" data-ar="زر متجرنا للحصول على أفضل العروض على الهواتف والملحقات">Visit our store for the best deals on phones and accessories</p>
+            <a href="porduct.html" class="inline-block px-6 md:px-8 py-3 bg-white text-primary-light dark:bg-slate-900 dark:text-primary-dark rounded-full font-medium hover:bg-blue-50 dark:hover:bg-slate-800 transition shadow-lg btn-animated" data-en="Shop Now" data-fr="Acheter Maintenant" data-ar="تسوق الآن">
+                Shop Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-8 md:mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+                <!-- Company Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4" data-en="🛍️ DH Phone" data-fr="🛍️ DH Téléphone" data-ar="🛍️ DH Phone">🛍️ DH Phone</h3>
+                    <p class="text-sm md:text-base text-gray-300 mb-3 md:mb-4">Your trusted phone shop for all your mobile needs. Quality phones, accessories, excellent service, and unbeatable prices.</p>
+                    <div class="flex space-x-3 md:space-x-4">
+                        <!-- Facebook Icon -->
+                        <a href="https://www.facebook.com/profile.php?id=100058599200790" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Facebook">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <!-- Instagram Icon -->
+                        <a href="coming-soon.html" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Instagram">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <!-- WhatsApp Icon -->
+                        <a href="https://api.whatsapp.com/message/UDDWXQWO7GXJC1?autoload=1&app_absent=0" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp fa-lg"></i>
+                        </a>
+                        <!-- TikTok Icon -->
+                        <a href="https://www.tiktok.com/@dh.phone2?_t=ZM-8yC4GUv4nyy&_r=1" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="TikTok">
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="porduct.html" class="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300">Products</a></li>
+                        <li><a href="Contact.html" class="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Contact Info</h4>
+                    <div class="space-y-2 text-sm md:text-base text-gray-300">
+                        <p>📞 0559364881</p>
+                        <p>📍 <a href="https://www.google.com/maps/place/DH+phone/@35.531125,-0.190004,144m/data=!3m1!1e3!4m6!3m5!1s0xd7e3d9d8913e5e9:0x463fa5ab4ea63ab3!8m2!3d35.5311248!4d-0.1900038!16s%2Fg%2F11tnyjcw86?hl=en&entry=ttu&g_ep=EgoyMDI1MDcyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Our Location</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-xs md:text-sm text-gray-400 text-center md:text-left" data-en="© 2024 DH Phone. All rights reserved." data-fr="© 2024 DH Téléphone. Tous droits réservés." data-ar="© 2024 DH Phone. All rights reserved.">
+                        © 2024 DH Phone. All rights reserved.
+                    </p>
+                    <div class="flex items-center space-x-2 mt-3 md:mt-0">
+                        <span class="text-xs md:text-sm text-gray-400">Made with</span>
+                        <svg class="w-3 h-3 md:w-4 md:h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span class="text-xs md:text-sm text-gray-400">by <a href="https://www.instagram.com/tayabe_doom_?igsh=c29raG8xMXA1cHV5" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">tayabedoom</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay for mobile menu -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden"></div>
+    <!-- Mobile menu as sliding drawer -->
+    <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-slate-900 shadow-lg z-50 transform translate-x-full transition-transform duration-300 md:hidden">
+      <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between px-4 py-4 border-b border-slate-200 dark:border-slate-700">
+          <span class="text-xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 text-transparent bg-clip-text" data-en="DH Phone" data-fr="DH Téléphone" data-ar="DH Phone">DH Phone</span>
+          <button id="mobile-menu-close" class="text-2xl focus:outline-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">&times;</button>
+        </div>
+        <nav class="flex-1 flex flex-col space-y-2 px-4 py-6">
+          <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
+          <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
+          <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+        </nav>
+        <div class="px-4 pb-6">
+          <!-- Mobile Language Dropdown -->
+          <div class="relative">
+            <button id="language-toggle-mobile" class="w-full flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg focus:outline-none">
+              <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
+              <i class="fas fa-chevron-down ml-2 text-xs"></i>
+            </button>
+            <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
+              <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
+              <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
+              <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add this before closing </body> tag -->
+<script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
+<script>
+  // Initialize Shopify client with real credentials
+  let shopifyClient = null;
+  
+  async function initializeShopify() {
+    try {
+      if (typeof ShopifyBuy !== 'undefined') {
+        shopifyClient = ShopifyBuy.buildClient({
+          domain: 'kwr3tv-ax.myshopify.com',
+          storefrontAccessToken: 'e318cfe2b56703f779f113ed17e8459c',
+          apiVersion: '2024-01'
+        });
+        console.log('✅ Shopify client initialized successfully');
+        return true;
+      } else {
+        throw new Error('ShopifyBuy SDK not loaded');
+      }
+    } catch (error) {
+      console.error('❌ Shopify client initialization failed:', error);
+      return false;
+    }
+  }
+
+  // Function to fetch and display random Shopify products
+  async function loadRandomShopifyProducts() {
+    const container = document.getElementById('shopify-products-container');
+    if (!container) return;
+
+    try {
+      // Show loading state
+      container.innerHTML = `
+        <div class="col-span-full text-center py-12">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-light dark:border-primary-dark"></div>
+          <p class="mt-4 text-slate-600 dark:text-slate-300">Loading products...</p>
+        </div>
+      `;
+
+      // Initialize Shopify if not already done
+      if (!shopifyClient) {
+        const initialized = await initializeShopify();
+        if (!initialized) {
+          throw new Error('Failed to initialize Shopify');
+        }
+      }
+
+      // Fetch all products from Shopify
+      const products = await shopifyClient.product.fetchAll();
+      console.log('📦 Fetched products from Shopify:', products.length);
+
+      if (!products || products.length === 0) {
+        throw new Error('No products found');
+      }
+
+      // Shuffle products and take first 3
+      const shuffledProducts = products.sort(() => 0.5 - Math.random());
+      const randomProducts = shuffledProducts.slice(0, 3);
+
+      // Generate product cards
+      const productCards = randomProducts.map(product => {
+        const firstVariant = product.variants[0];
+
+        const image = product.images[0] ? product.images[0].src : 'https://via.placeholder.com/300x200?text=Product+Image';
+        const description = product.description ? product.description.substring(0, 100) + '...' : 'Premium product with exceptional quality.';
+        
+        return `
+          <div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <div class="h-64 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700 flex items-center justify-center p-8">
+              <img src="${image}" alt="${product.title}" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">${product.title}</h3>
+              <p class="text-slate-600 dark:text-slate-300 mb-4">${description}</p>
+              <div class="flex justify-end">
+                <button onclick="window.location.href='product-in.html?product=${product.handle}'" class="px-4 py-2 bg-primary-light dark:bg-primary-dark text-white rounded-full text-sm hover:bg-blue-700 dark:hover:bg-cyan-600 transition" data-en="Order Now" data-fr="Commander" data-ar="اطلب الآن">
+                  Order Now
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Update container with product cards
+      container.innerHTML = productCards;
+
+    } catch (error) {
+      console.error('❌ Error loading Shopify products:', error);
+      
+      // Fallback to static products if Shopify fails
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div class="h-64 bg-gradient-to-r from-blue-500 to-blue-600 dark:from-cyan-600 dark:to-blue-700 flex items-center justify-center p-8">
+            <div class="phone-mockup">
+              <div class="phone-screen bg-white dark:bg-slate-800 rounded-[30px] p-1.5 w-48 h-[300px] border-6 border-slate-900 dark:border-slate-700">
+                <div class="h-full rounded-[24px] overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-slate-700 dark:to-slate-900"></div>
+              </div>
+            </div>
+          </div>
+                      <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">DH Pro X</h3>
+              <p class="text-slate-600 dark:text-slate-300 mb-4">Our flagship model with revolutionary camera system</p>
+              <div class="flex justify-end">
+                <button onclick="window.location.href='product-in.html?product=dh-pro-x'" class="px-4 py-2 bg-primary-light dark:bg-primary-dark text-white rounded-full text-sm hover:bg-blue-700 dark:hover:bg-cyan-600 transition" data-en="Order Now" data-fr="Commander" data-ar="اطلب الآن">
+                  Order Now
+                </button>
+              </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div class="h-64 bg-gradient-to-r from-emerald-500 to-teal-600 dark:from-emerald-600 dark:to-teal-700 flex items-center justify-center p-8">
+            <div class="phone-mockup">
+              <div class="phone-screen bg-white dark:bg-slate-800 rounded-[30px] p-1.5 w-48 h-[300px] border-6 border-slate-900 dark:border-slate-700">
+                <div class="h-full rounded-[24px] overflow-hidden bg-gradient-to-br from-green-50 to-green-100 dark:from-slate-700 dark:to-slate-900"></div>
+              </div>
+            </div>
+          </div>
+                      <div class="p-6">
+              <h3 class="text-xl font-bold mb-2">DH Air</h3>
+              <p class="text-slate-600 dark:text-slate-300 mb-4">Ultra-light design without compromising performance</p>
+              <div class="flex justify-end">
+                <button onclick="window.location.href='product-in.html?product=dh-air'" class="px-4 py-2 bg-primary-light dark:bg-primary-dark text-white rounded-full text-sm hover:bg-blue-700 dark:hover:bg-cyan-600 transition" data-en="Order Now" data-fr="Commander" data-ar="اطلب الآن">
+                  Order Now
+                </button>
+              </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div class="h-64 bg-gradient-to-r from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700 flex items-center justify-center p-8">
+            <div class="phone-mockup">
+              <div class="phone-screen bg-white dark:bg-slate-800 rounded-[30px] p-1.5 w-48 h-[300px] border-6 border-slate-900 dark:border-slate-700">
+                <div class="h-full rounded-[24px] overflow-hidden bg-gradient-to-br from-purple-50 to-violet-100 dark:from-slate-700 dark:to-slate-900"></div>
+              </div>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold mb-2">DH Lite</h3>
+            <p class="text-slate-600 dark:text-slate-300 mb-4">Affordable premium with all essential features</p>
+            <div class="flex justify-end">
+                              <button onclick="window.location.href='product-in.html?product=dh-lite'" class="px-4 py-2 bg-primary-light dark:bg-primary-dark text-white rounded-full text-sm hover:bg-blue-700 dark:hover:bg-cyan-600 transition" data-en="Order Now" data-fr="Commander" data-ar="اطلب الآن">
+                  Order Now
+                </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // Add to cart function
+  async function addToCart(variantId) {
+    try {
+      if (!shopifyClient) {
+        console.error('Shopify client not initialized');
+        return;
+      }
+
+      // Check if cart exists in localStorage
+      let checkoutId = localStorage.getItem('shopify_checkout_id');
+      let cart;
+      
+      if (checkoutId) {
+        cart = await shopifyClient.checkout.fetch(checkoutId);
+      } else {
+        cart = await shopifyClient.checkout.create();
+        localStorage.setItem('shopify_checkout_id', cart.id);
+      }
+      
+      // Add item to cart
+      const lineItems = [{
+        variantId,
+        quantity: 1
+      }];
+      
+      cart = await shopifyClient.checkout.addLineItems(cart.id, lineItems);
+      console.log('✅ Added to cart:', cart);
+      
+      // Show success message
+      alert('Product added to cart successfully!');
+      
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      alert('Failed to add product to cart. Please try again.');
+    }
+  }
+
+  // Load products when page loads
+  document.addEventListener('DOMContentLoaded', loadRandomShopifyProducts);
+  
+  // Counter animation function
+  function initializeCounters() {
+    const observerOptions = {
+      threshold: 0.5,
+      rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target;
+          const target = parseInt(counter.getAttribute('data-count'));
+          animateCounter(counter, target);
+          observer.unobserve(counter);
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all stat numbers
+    document.querySelectorAll('.stat-number').forEach(counter => {
+      observer.observe(counter);
+    });
+  }
+  
+  function animateCounter(element, target) {
+    let current = 0;
+    const increment = target / 50;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= target) {
+        current = target;
+        clearInterval(timer);
+      }
+      element.textContent = Math.floor(current);
+    }, 30);
+  }
+  
+  // Initialize counters when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(initializeCounters, 1000);
+  });
+
+</script>
+<script src="theme.js" defer></script>
+<script src="lang.js" defer></script>
+</body>
+</html>

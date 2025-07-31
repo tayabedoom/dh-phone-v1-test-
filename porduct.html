@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-en="Products | <span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-fr="Produits | <span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-ar="المنتجات | <span translate=\"no\" class=\"notranslate\">DH Phone</span>">Products | <span translate="no" class="notranslate">DH Phone</span></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="porduct.css">
+    <script src="config.js?v=1703123456789"></script>
+    <script>
+        // Simple Shopify Integration - No config dependencies
+        const shopifyAccessToken = 'e318cfe2b56703f779f113ed17e8459c';
+        const shopDomain = 'kwr3tv-ax.myshopify.com';
+        const shopifyEndpoint = `https://${shopDomain}/api/2024-01/graphql.json`;
+
+        // Global variables
+        let allProducts = [];
+        let filteredProducts = [];
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing products page...');
+            loadProducts();
+            initializeSearch();
+            initializeCategories();
+        });
+
+        // Test Shopify connection
+        async function testShopifyConnection() {
+            try {
+                console.log('🔍 Testing Shopify connection...');
+                
+                const testQuery = `
+                    query {
+                        shop {
+                            name
+                            primaryDomain {
+                                url
+                            }
+                        }
+                    }
+                `;
+
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: testQuery
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Shopify test response:', data);
+
+                if (data.errors) {
+                    console.error('Shopify API errors:', data.errors);
+                    return false;
+                }
+
+                if (data.data && data.data.shop) {
+                    console.log('✅ Shopify connection successful!');
+                    return true;
+                }
+
+                return false;
+            } catch (error) {
+                console.error('❌ Shopify connection test failed:', error);
+                return false;
+            }
+        }
+
+        // Fetch all products from Shopify
+        async function loadProducts() {
+            const productList = document.getElementById('product-list');
+            if (!productList) {
+                console.error('❌ Product list container not found');
+                return;
+            }
+
+            // Show loading state
+            showLoadingState();
+
+            try {
+                // First test the connection
+                const connectionTest = await testShopifyConnection();
+                if (!connectionTest) {
+                    showError('Failed to connect to Shopify. Please check your configuration.');
+                    return;
+                }
+
+                console.log('📦 Loading products from Shopify...');
+                
+                const query = `
+                    query getProducts($first: Int!) {
+                        products(first: $first) {
+                            edges {
+                                node {
+                                    id
+                                    title
+                                    handle
+                                    description
+                                    productType
+                                    tags
+                                    priceRange {
+                                        minVariantPrice {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                    images(first: 5) {
+                                        edges {
+                                            node {
+                                                url
+                                                altText
+                                            }
+                                        }
+                                    }
+                                    variants(first: 1) {
+                                        edges {
+                                            node {
+                                                availableForSale
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            pageInfo {
+                                hasNextPage
+                                hasPreviousPage
+                            }
+                        }
+                    }
+                `;
+
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: { first: 50 }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 Shopify API response:', data);
+                
+                if (data.errors) {
+                    console.error('❌ Shopify API errors:', data.errors);
+                    showError('Failed to load products from Shopify. Please check your API configuration.');
+                    return;
+                }
+
+                if (!data.data || !data.data.products) {
+                    console.error('❌ No products data received');
+                    showError('No products found in your Shopify store.');
+                    return;
+                }
+
+                allProducts = data.data.products.edges.map(edge => edge.node);
+                console.log(`✅ Loaded ${allProducts.length} products from Shopify`);
+                
+                // Initialize categories from products
+                initializeCategoriesFromProducts();
+                
+                // Display all products initially
+                filteredProducts = [...allProducts];
+                displayProducts(filteredProducts);
+                
+            } catch (error) {
+                console.error('❌ Error loading products:', error);
+                showError('Failed to load products. Please try again later.');
+            }
+        }
+
+        // Show loading state
+        function showLoadingState() {
+            const productList = document.getElementById('product-list');
+            if (!productList) return;
+
+            productList.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="loading-spinner mx-auto mb-4"></div>
+                    <p class="text-gray-600 dark:text-gray-400">Loading products from Shopify...</p>
+                </div>
+            `;
+        }
+
+        // Display products in the grid
+        function displayProducts(products) {
+            const productList = document.getElementById('product-list');
+            if (!productList) return;
+
+            if (products.length === 0) {
+                productList.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <div class="text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-search text-4xl mb-4"></i>
+                            <p class="text-lg">No products found</p>
+                            <p class="text-sm">Try adjusting your search or filter criteria</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            console.log(`🎨 Displaying ${products.length} products`);
+
+            productList.innerHTML = products.map(product => {
+                const price = product.priceRange?.minVariantPrice?.amount || '0';
+                const currency = product.priceRange?.minVariantPrice?.currencyCode || 'USD';
+                const image = product.images?.edges[0]?.node || { url: 'https://placehold.co/400x300', altText: product.title };
+                const isAvailable = product.variants?.edges[0]?.node?.availableForSale || false;
+                
+                return `
+                    <div class="product-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
+                        <div class="relative overflow-hidden">
+                            <img src="${image.url}" alt="${image.altText || product.title}" 
+                                 class="product-image w-full h-48 object-cover transition-transform duration-300"
+                                 onerror="this.src='https://placehold.co/400x300?text=No+Image'">
+                            <div class="absolute top-2 right-2">
+                                <span class="px-2 py-1 text-xs font-medium rounded-full ${isAvailable ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}">
+                                    ${isAvailable ? 'In Stock' : 'Out of Stock'}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">${product.title}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">${product.description || 'No description available'}</p>
+                            <div class="flex justify-between items-center">
+                                <div class="price-tag">${currency} ${price}</div>
+                                <button class="btn-primary px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105" 
+                                        ${isAvailable ? `onclick="viewProduct('${product.handle}')"` : `onclick="window.location.href='Contact.html'"`}>
+                                    ${isAvailable ? 'View Details' : 'Contact Us'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('search-input');
+            if (!searchInput) {
+                console.warn('⚠️ Search input not found');
+                return;
+            }
+
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchQuery = this.value.toLowerCase().trim();
+                    console.log('🔍 Searching for:', searchQuery);
+                    filterProducts();
+                }, 300);
+            });
+        }
+
+        // Initialize categories
+        function initializeCategories() {
+            const categorySlider = document.getElementById('category-slider');
+            if (!categorySlider) {
+                console.warn('⚠️ Category slider not found');
+                return;
+            }
+
+            // Add "All" category
+            const allCategory = document.createElement('button');
+            allCategory.className = 'category-item active px-4 py-2 rounded-full border-2 border-gray-200 dark:border-slate-600 text-sm font-medium transition-all duration-200 hover:border-primary-500 dark:hover:border-primary-400';
+            allCategory.textContent = 'All';
+            allCategory.dataset.category = 'all';
+            allCategory.addEventListener('click', () => selectCategory('all'));
+            categorySlider.appendChild(allCategory);
+        }
+
+        // Initialize categories from products
+        function initializeCategoriesFromProducts() {
+            const categorySlider = document.getElementById('category-slider');
+            if (!categorySlider) return;
+
+            // Get unique product types
+            const productTypes = [...new Set(allProducts.map(product => product.productType).filter(Boolean))];
+            console.log('📂 Product types found:', productTypes);
+            
+            // Clear existing categories except "All"
+            const allButton = categorySlider.querySelector('[data-category="all"]');
+            categorySlider.innerHTML = '';
+            if (allButton) {
+                categorySlider.appendChild(allButton);
+            }
+
+            // Add product type categories
+            productTypes.forEach(type => {
+                const categoryButton = document.createElement('button');
+                categoryButton.className = 'category-item px-4 py-2 rounded-full border-2 border-gray-200 dark:border-slate-600 text-sm font-medium transition-all duration-200 hover:border-primary-500 dark:hover:border-primary-400';
+                categoryButton.textContent = type;
+                categoryButton.dataset.category = type;
+                categoryButton.addEventListener('click', () => selectCategory(type));
+                categorySlider.appendChild(categoryButton);
+            });
+        }
+
+        // Select category
+        function selectCategory(category) {
+            currentCategory = category;
+            console.log('📂 Selected category:', category);
+            
+            // Update active state
+            document.querySelectorAll('.category-item').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.category === category) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            filterProducts();
+        }
+
+        // Filter products based on search and category
+        function filterProducts() {
+            filteredProducts = allProducts.filter(product => {
+                const matchesSearch = !searchQuery || 
+                    product.title.toLowerCase().includes(searchQuery) ||
+                    (product.description && product.description.toLowerCase().includes(searchQuery)) ||
+                    (product.productType && product.productType.toLowerCase().includes(searchQuery));
+                
+                const matchesCategory = currentCategory === 'all' || 
+                    (product.productType && product.productType === currentCategory);
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            console.log(`🔍 Filtered to ${filteredProducts.length} products`);
+            displayProducts(filteredProducts);
+        }
+
+        // View product details
+        function viewProduct(handle) {
+            console.log('👁️ Viewing product:', handle);
+            window.location.href = `product-in.html?product=${handle}`;
+        }
+
+        // Show error message
+        function showError(message) {
+            const productList = document.getElementById('product-list');
+            if (!productList) return;
+
+            productList.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="text-red-500 dark:text-red-400">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                        <p class="text-lg">${message}</p>
+                        <button onclick="loadProducts()" class="mt-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+    <script src="products.js" defer></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            light: '#2563eb', // blue-600
+                            dark: '#0ea5e9',  // sky-500
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        secondary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .product-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .dark .product-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+        .product-image {
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        .btn-primary {
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+        }
+        .header-glass {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4f46e5;
+            transition: width 0.3s ease;
+        }
+        .dark .nav-link::after {
+            background-color: #818cf8;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .active::after {
+            width: 100%;
+        }
+        .price-tag {
+            color: #4f46e5;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        .dark .price-tag {
+            color: #818cf8;
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        .dark .skeleton {
+            background: linear-gradient(90deg, #2d3748 25%, #4a5568 50%, #2d3748 75%);
+            background-size: 200% 100%;
+        }
+        .filter-section {
+            transition: all 0.3s ease;
+        }
+        .search-bar {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .dark .search-bar {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        .filter-btn {
+            transition: all 0.2s ease;
+        }
+        .filter-btn:hover {
+            background-color: #e0e7ff;
+        }
+        .dark .filter-btn:hover {
+            background-color: #3730a3;
+        }
+        .category-slider {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .category-slider::-webkit-scrollbar {
+            display: none;
+        }
+        .category-item {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+        .category-item.active {
+            border-color: #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .dark .category-item.active {
+            border-color: #818cf8;
+            color: #818cf8;
+        }
+        /* RTL specific styles */
+        [dir="rtl"] .ml-10 {
+            margin-right: 2.5rem;
+            margin-left: 0;
+        }
+        [dir="rtl"] .mr-3 {
+            margin-left: 0.75rem;
+            margin-right: 0;
+        }
+        [dir="rtl"] .ml-1 {
+            margin-right: 0.25rem;
+            margin-left: 0;
+        }
+        [dir="rtl"] .space-x-8 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+            --tw-space-x-reverse: 1;
+        }
+        [dir="rtl"] .left-4 {
+            left: auto;
+            right: 1rem;
+        }
+        [dir="rtl"] .left-0 {
+            left: auto;
+            right: 0;
+        }
+        [dir="rtl"] .right-0 {
+            right: auto;
+            left: 0;
+        }
+        [dir="rtl"] .text-left {
+            text-align: right;
+        }
+        [dir="rtl"] .transform {
+            transform-style: preserve-3d;
+        }
+        [dir="rtl"] .hover\:translate-x-1:hover {
+            --tw-translate-x: -0.25rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300 font-sans">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 header-glass shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-12 md:h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="flex items-center space-x-2 logo-link" style="direction: ltr;">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-lg md:text-xl">DH</span>
+                        </div>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 bg-clip-text text-transparent" data-en="Phone" data-fr="Téléphone" data-ar="Phone">Phone</span>
+                    </a>
+                </div>
+                <!-- Right side - Navigation and Controls -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <!-- Navigation Links -->
+                    <div class="flex items-center space-x-8" style="direction: ltr;">
+                        <a href="index.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الصفحة الرئيسية">Home</a>
+                        <a href="porduct.html" class="text-primary-600 dark:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline active" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
+                        <a href="Contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+                    </div>
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <button id="language-toggle" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
+                            <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
+                            <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
+                            <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
+                            <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
+                        </div>
+                    </div>
+                    <!-- Dark Mode Toggle -->
+                    <button id="theme-toggle" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ml-8">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <button id="theme-toggle-mobile" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+        </nav>
+    </header>
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <!-- Page Title -->
+        <section class="text-center mb-8 animate-fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent" data-en="Our Products" data-fr="Nos Produits" data-ar="منتجاتنا">Our Products</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto" data-en="Discover our latest collection of high-quality tech products" data-fr="Découvrez notre dernière collection de produits technologiques de haute qualité" data-ar="اكتشف أحدث مجموعة من منتجات التكنولوجيا عالية الجودة">Discover our latest collection of high-quality tech products</p>
+        </section>
+        <!-- Search and Category Filters -->
+        <div class="mb-12">
+            <!-- Search Bar -->
+            <div class="mb-6">
+                <div class="relative search-bar">
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Search products..." 
+                        class="w-full p-4 pl-12 rounded-xl bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                    <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+            <!-- Category Slider -->
+            <div class="category-slider pb-4 -mx-2 px-2">
+                <div class="flex space-x-3" id="category-slider">
+                    <!-- Categories will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+        <!-- Product Grid -->
+        <div class="flex-1">
+            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <!-- Skeleton Loaders -->
+                <div class="product-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="h-48 skeleton"></div>
+                    <div class="p-6">
+                        <div class="h-6 skeleton rounded mb-4"></div>
+                        <div class="h-4 skeleton rounded mb-6 w-3/4"></div>
+                        <div class="flex justify-between items-center">
+                            <div class="h-6 skeleton rounded w-1/3"></div>
+                            <div class="h-10 skeleton rounded w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="h-48 skeleton"></div>
+                    <div class="p-6">
+                        <div class="h-6 skeleton rounded mb-4"></div>
+                        <div class="h-4 skeleton rounded mb-6 w-3/4"></div>
+                        <div class="flex justify-between items-center">
+                            <div class="h-6 skeleton rounded w-1/3"></div>
+                            <div class="h-10 skeleton rounded w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="h-48 skeleton"></div>
+                    <div class="p-6">
+                        <div class="h-6 skeleton rounded mb-4"></div>
+                        <div class="h-4 skeleton rounded mb-6 w-3/4"></div>
+                        <div class="flex justify-between items-center">
+                            <div class="h-6 skeleton rounded w-1/3"></div>
+                            <div class="h-10 skeleton rounded w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg">
+                    <div class="h-48 skeleton"></div>
+                    <div class="p-6">
+                        <div class="h-6 skeleton rounded mb-4"></div>
+                        <div class="h-4 skeleton rounded mb-6 w-3/4"></div>
+                        <div class="flex justify-between items-center">
+                            <div class="h-6 skeleton rounded w-1/3"></div>
+                            <div class="h-10 skeleton rounded w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-8 md:mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
+                <!-- Company Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ <span translate="no" class="notranslate">DH Phone</span></h3>
+                    <p class="text-sm md:text-base text-gray-300 mb-3 md:mb-4">Your trusted partner for all your phone needs. Quality products, excellent service, and unbeatable prices.</p>
+                    <div class="flex space-x-3 md:space-x-4">
+                        <!-- Facebook Icon -->
+                        <a href="https://www.facebook.com/profile.php?id=100058599200790" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Facebook">
+                            <i class="fab fa-facebook-f fa-lg"></i>
+                        </a>
+                        <!-- Instagram Icon -->
+                        <a href="coming-soon.html" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Instagram">
+                            <i class="fab fa-instagram fa-lg"></i>
+                        </a>
+                        <!-- WhatsApp Icon -->
+                        <a href="https://api.whatsapp.com/message/UDDWXQWO7GXJC1?autoload=1&app_absent=0" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="WhatsApp">
+                            <i class="fab fa-whatsapp fa-lg"></i>
+                        </a>
+                        <!-- TikTok Icon -->
+                        <a href="https://www.tiktok.com/@dh.phone2?_t=ZM-8yC4GUv4nyy&_r=1" target="_blank" rel="noopener" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="TikTok">
+                            <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300">Home</a></li>
+                        <li><a href="porduct.html" class="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300">Products</a></li>
+                        <li><a href="Contact.html" class="text-sm md:text-base text-gray-300 hover:text-white transition-colors duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4">Contact Info</h4>
+                    <div class="space-y-2 text-sm md:text-base text-gray-300">
+                        <p>📞 0559364881</p>
+                        <p>📍 <a href="https://www.google.com/maps/place/DH+phone/@35.531125,-0.190004,144m/data=!3m1!1e3!4m6!3m5!1s0xd7e3d9d8913e5e9:0x463fa5ab4ea63ab3!8m2!3d35.5311248!4d-0.1900038!16s%2Fg%2F11tnyjcw86?hl=en&entry=ttu&g_ep=EgoyMDI1MDcyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Our Location</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom Bar -->
+            <div class="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-xs md:text-sm text-gray-400 text-center md:text-left">
+                        © 2025 <span translate="no" class="notranslate">DH Phone</span>. All rights reserved.
+                    </p>
+                    <div class="flex items-center space-x-2 mt-3 md:mt-0">
+                        <span class="text-xs md:text-sm text-gray-400">Made with</span>
+                        <svg class="w-3 h-3 md:w-4 md:h-4 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span class="text-xs md:text-sm text-gray-400">by <a href="https://www.instagram.com/tayabe_doom_?igsh=c29raG8xMXA1cHV5" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 transition-colors duration-300">tayabedoom</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay for mobile menu -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden"></div>
+    <!-- Mobile menu as sliding drawer -->
+    <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-slate-900 shadow-lg z-50 transform translate-x-full transition-transform duration-300 md:hidden">
+      <div class="flex flex-col h-full">
+        <div class="flex items-center justify-between px-4 py-4 border-b border-slate-200 dark:border-slate-700">
+          <span class="text-xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 text-transparent bg-clip-text" data-en="DH Phone" data-fr="DH Téléphone" data-ar="DH Phone">DH Phone</span>
+          <button id="mobile-menu-close" class="text-2xl focus:outline-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">&times;</button>
+        </div>
+        <nav class="flex-1 flex flex-col space-y-2 px-4 py-6">
+          <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
+          <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
+          <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+        </nav>
+        <div class="px-4 pb-6">
+          <!-- Mobile Language Dropdown -->
+          <div class="relative">
+            <button id="language-toggle-mobile" class="w-full flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg focus:outline-none">
+              <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
+              <i class="fas fa-chevron-down ml-2 text-xs"></i>
+            </button>
+            <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-full bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-20 border border-gray-200 dark:border-slate-600">
+              <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
+              <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
+              <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="theme.js" defer></script>
+    
+    <script src="index.js" defer></script>
+    <script>
+        // Language toggle functionality (reusable)
+        (function() {
+            let langToggle, langDropdown, langToggleMobile, langDropdownMobile;
+            const html = document.documentElement;
+            
+            function setLang(language) {
+                if (language === 'ar') {
+                    html.setAttribute('lang', 'ar');
+                    html.setAttribute('dir', 'rtl');
+                    localStorage.setItem('lang', 'ar');
+                } else if (language === 'fr') {
+                    html.setAttribute('lang', 'fr');
+                    html.setAttribute('dir', 'ltr');
+                    localStorage.setItem('lang', 'fr');
+                } else {
+                    html.setAttribute('lang', 'en');
+                    html.setAttribute('dir', 'ltr');
+                    localStorage.setItem('lang', 'en');
+                }
+                
+                // Update language display in toggle buttons
+                const langToggleSpan = document.querySelector('#language-toggle span');
+                const langToggleMobileSpan = document.querySelector('#language-toggle-mobile span');
+                
+                if (langToggleSpan) {
+                    langToggleSpan.textContent = language.toUpperCase();
+                }
+                if (langToggleMobileSpan) {
+                    langToggleMobileSpan.textContent = language.toUpperCase();
+                }
+                
+                // Update all translatable elements
+                document.querySelectorAll('[data-' + language + ']').forEach(element => {
+                    const text = element.getAttribute('data-' + language);
+                    if (text) {
+                        element.textContent = text;
+                    }
+                });
+            }
+            
+            function closeLangDropdown() {
+                if (langDropdown) {
+                    langDropdown.classList.add('hidden');
+                    langToggle.setAttribute('aria-expanded', 'false');
+                }
+                if (langDropdownMobile) {
+                    langDropdownMobile.classList.add('hidden');
+                }
+            }
+            
+            function openLangDropdown() {
+                if (langDropdown) {
+                    langDropdown.classList.remove('hidden');
+                    langToggle.setAttribute('aria-expanded', 'true');
+                }
+            }
+            
+            function initLanguageToggle() {
+                // Get elements
+                langToggle = document.getElementById('language-toggle');
+                langDropdown = document.getElementById('language-dropdown');
+                langToggleMobile = document.getElementById('language-toggle-mobile');
+                langDropdownMobile = document.getElementById('language-dropdown-mobile');
+                
+                // Set initial language
+                const savedLang = localStorage.getItem('lang') || 'en';
+                setLang(savedLang);
+                
+                // Desktop language toggle
+                if (langToggle && langDropdown) {
+                    langToggle.setAttribute('aria-haspopup', 'listbox');
+                    langToggle.setAttribute('aria-expanded', 'false');
+                    langDropdown.setAttribute('role', 'listbox');
+                    
+                    langToggle.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (langDropdown.classList.contains('hidden')) {
+                            openLangDropdown();
+                        } else {
+                            closeLangDropdown();
+                        }
+                    });
+                    
+                    // Close dropdown when clicking outside
+                    document.addEventListener('click', function(e) {
+                        if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
+                            closeLangDropdown();
+                        }
+                    });
+                    
+                    // Keyboard navigation
+                    langToggle.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            closeLangDropdown();
+                        } else if (e.key === 'ArrowDown') {
+                            e.preventDefault();
+                            openLangDropdown();
+                            const firstOption = langDropdown.querySelector('.lang-option');
+                            if (firstOption) firstOption.focus();
+                        }
+                    });
+                    
+                    // Language option selection
+                    langDropdown.querySelectorAll('.lang-option').forEach(option => {
+                        option.setAttribute('tabindex', '0');
+                        option.addEventListener('click', function() {
+                            const selectedLang = this.getAttribute('data-lang');
+                            setLang(selectedLang);
+                            closeLangDropdown();
+                        });
+                        
+                        option.addEventListener('keydown', function(e) {
+                            if (e.key === 'Escape') {
+                                closeLangDropdown();
+                                langToggle.focus();
+                            } else if (e.key === 'ArrowDown') {
+                                e.preventDefault();
+                                const next = this.nextElementSibling;
+                                if (next) next.focus();
+                            } else if (e.key === 'ArrowUp') {
+                                e.preventDefault();
+                                const prev = this.previousElementSibling;
+                                if (prev) prev.focus();
+                                else langToggle.focus();
+                            } else if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                this.click();
+                            }
+                        });
+                    });
+                }
+
+                // Mobile language toggle
+                if (langToggleMobile && langDropdownMobile) {
+                    langToggleMobile.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        langDropdownMobile.classList.toggle('hidden');
+                    });
+
+                    // Handle mobile language selection
+                    langDropdownMobile.querySelectorAll('.lang-option').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const selectedLang = e.target.getAttribute('data-lang');
+                            setLang(selectedLang);
+                            langDropdownMobile.classList.add('hidden');
+                        });
+                    });
+
+                    // Close mobile dropdown when clicking outside
+                    window.addEventListener('click', function(e) {
+                        if (!langToggleMobile.contains(e.target) && !langDropdownMobile.contains(e.target)) {
+                            langDropdownMobile.classList.add('hidden');
+                        }
+                    });
+                }
+            }
+            
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initLanguageToggle);
+            } else {
+                initLanguageToggle();
+            }
+        })(); 
+    </script>
+</body>
+</html>

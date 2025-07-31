@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow anyone to read, only you to write
+    match /productFeatures/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == "vxT0hXsMaVcHidEVPCJhNoGTQB53";
+    }
+    match /productSpecs/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == "vxT0hXsMaVcHidEVPCJhNoGTQB53";
+    }
+    match /landingPages/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == "vxT0hXsMaVcHidEVPCJhNoGTQB53";
+    }
+  }
+} 
