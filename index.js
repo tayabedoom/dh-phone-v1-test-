@@ -5,30 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuClose = document.getElementById('mobile-menu-close');
 
     // Mobile menu toggle functions
-    function openMobileMenu() {
-        if (mobileMenu) {
-            mobileMenu.classList.remove('hidden', 'menu-slide-out');
-            // Force reflow to restart animation
-            void mobileMenu.offsetWidth;
-            mobileMenu.classList.add('menu-slide-in');
-        }
-    }
-    function closeMobileMenu() {
-        if (mobileMenu) {
-            mobileMenu.classList.remove('menu-slide-in');
-            mobileMenu.classList.add('menu-slide-out');
-            mobileMenu.addEventListener('animationend', function handler() {
-                mobileMenu.classList.add('hidden');
-                mobileMenu.classList.remove('menu-slide-out');
-                mobileMenu.removeEventListener('animationend', handler);
-            });
-        }
-    }
     function toggleMobileMenu() {
-        if (mobileMenu.classList.contains('hidden')) {
-            openMobileMenu();
-        } else {
-            closeMobileMenu();
+        if (mobileMenu) {
+            mobileMenu.classList.toggle('hidden');
         }
     }
 
@@ -39,7 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Close button functionality
     if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileMenuClose.addEventListener('click', function() {
+            mobileMenu.classList.add('hidden');
+        });
     }
 
     // Close menu when a nav link is clicked

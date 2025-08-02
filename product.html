@@ -11,43 +11,5 @@
     <script>
         window.location.href = 'porduct.html';
     </script>
-    <script>
-// Mobile menu animation logic for product page
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-const mobileMenuClose = document.getElementById('mobile-menu-close');
-
-function openMobileMenu() {
-  if (mobileMenu) {
-    mobileMenu.classList.remove('hidden', 'menu-slide-out');
-    void mobileMenu.offsetWidth;
-    mobileMenu.classList.add('menu-slide-in');
-  }
-}
-function closeMobileMenu() {
-  if (mobileMenu) {
-    mobileMenu.classList.remove('menu-slide-in');
-    mobileMenu.classList.add('menu-slide-out');
-    mobileMenu.addEventListener('animationend', function handler() {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('menu-slide-out');
-      mobileMenu.removeEventListener('animationend', handler);
-    });
-  }
-}
-function toggleMobileMenu() {
-  if (mobileMenu.classList.contains('hidden')) {
-    openMobileMenu();
-  } else {
-    closeMobileMenu();
-  }
-}
-if (mobileMenuButton) {
-  mobileMenuButton.addEventListener('click', toggleMobileMenu);
-}
-if (mobileMenuClose) {
-  mobileMenuClose.addEventListener('click', closeMobileMenu);
-}
-</script>
 </body>
 </html> 

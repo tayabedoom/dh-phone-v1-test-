@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="Product Details | <span translate=\"no\" class=\"notranslate\">DH Phone</span>DH PHONE<span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-ar="تفاصيل المنتج | <span translate=\"no\" class=\"notranslate\">DH Phone</span>">Product Details | <span translate="no" class="notranslate">DH Phone</span></title>
+    <title data-en="Product Details | DH Phone" data-fr="Détails du Produit | DH Phone" data-ar="تفاصيل المنتج | DH Phone">Product Details | DH Phone</title>
     <!-- Note: For production, consider installing Tailwind CSS locally instead of using CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="stylesheet" href="hamburger-menu.css">
+    <script src="hamburger-menu.js" defer></script>
     <!-- Firebase SDK -->
     <script src="config.js"></script>
     <script type="module">
@@ -34,7 +36,11 @@
     </script>
     <script>
         (function() {
-            emailjs.init(window.config.emailjs.publicKey); // EmailJS public key from config
+            if (window.config && window.config.emailjs && window.config.emailjs.publicKey) {
+                emailjs.init(window.config.emailjs.publicKey); // EmailJS public key from config
+            } else {
+                console.warn('EmailJS not configured. Please add your EmailJS public key to config.js');
+            }
         })();
     </script>
     <script>
@@ -160,6 +166,49 @@
         }
         [dir="rtl"] .hover\:translate-x-1:hover {
             --tw-translate-x: -0.25rem;
+        }
+        
+        /* Scroll and overflow fixes */
+        html, body {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: rgba(79, 70, 229, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            z-index: 1000;
+            display: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-indicator:hover {
+            background: rgba(79, 70, 229, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .scroll-indicator.show {
+            display: block;
         }
         /* Basic Reset & Global Styles */
         * {
@@ -1258,57 +1307,6 @@
             background: rgba(45, 55, 72, 0.8);
         }
 
-        /* Animation for mobile menu */
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-            }
-            to {
-                transform: translateX(100%);
-            }
-        }
-
-        /* RTL animations */
-        @keyframes slideInRTL {
-            from {
-                transform: translateX(-100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideOutRTL {
-            from {
-                transform: translateX(0);
-            }
-            to {
-                transform: translateX(-100%);
-            }
-        } 
-
-        /* Mobile menu open/close animation classes */
-        .menu-slide-in {
-        animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        .menu-slide-out {
-        animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        [dir="rtl"] .menu-slide-in {
-        animation: slideInRTL 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        [dir="rtl"] .menu-slide-out {
-        animation: slideOutRTL 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
         /* Responsive */
         @media (max-width: 768px) {
             .product-container {
@@ -1369,62 +1367,26 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300 font-sans">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 header-glass shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300 font-sans overflow-x-hidden">
+    <!-- Simple Header with Logo -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="index.html" class="flex items-center space-x-2 logo-link" style="direction: ltr;">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center shadow-lg">
-                            <span class="text-white font-bold text-lg md:text-xl">DH</span>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-xl">DH</span>
                         </div>
-                        <span class="text-2xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 bg-clip-text text-transparent" data-en="Phone" data-fr="Téléphone" data-ar="Phone">Phone</span>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phone</span>
                     </a>
                 </div>
-                <!-- Desktop Navigation -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-center space-x-8">
-                        <a href="index.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link" data-en="Home" data-fr="Accueil" data-ar="الصفحة الرئيسية">Home</a>
-                        <a href="porduct.html" class="text-primary-600 dark:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link active" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-                        <a href="Contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-                        <!-- Language Selector -->
-                        <div class="relative">
-                            <button id="language-toggle" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
-                                <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-                                <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                            </button>
-                            <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
-                                <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-                                <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-                                <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-                            </div>
-                        </div>
-                        <!-- Dark Mode Toggle -->
-                        <button id="theme-toggle" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                            <i class="fas fa-moon dark:hidden"></i>
-                            <i class="fas fa-sun hidden dark:block"></i>
-                        </button>
-                    </div>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center space-x-3">
-                    <button id="theme-toggle-mobile" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block"></i>
-                    </button>
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
             </div>
-            
-    </nav>
+        </div>
     </header>
 
     <!-- Main Content -->
-    <div class="container">
+    <div class="container min-h-screen overflow-y-auto">
         <!-- Product Section -->
         <section class="product-container">
             <div class="product-images">
@@ -1483,6 +1445,17 @@
                     ★★★★★ 4.7 (128 Reviews)
     </div>
                 <div class="stock-status">Contact for Availability</div>
+                <div id="shopify-status" class="text-sm text-gray-500 mt-2" style="display: none;">
+                    <span id="status-icon">🔍</span>
+                    <span id="status-text">Testing Shopify connection...</span>
+                </div>
+                <div id="algeria-status" class="text-sm text-gray-500 mt-2" style="display: none;">
+                    <span id="algeria-icon">🇩🇿</span>
+                    <span id="algeria-text">Loading Algeria data...</span>
+                    <button id="load-all-wilayas" class="ml-2 px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600" onclick="loadAllWilayas()" style="display: none;">
+                        Load All 58 Wilayas
+                    </button>
+                </div>
                 
                 <h3>Key Features</h3>
                 <ul id="dynamic-features" class="features-list">
@@ -1491,6 +1464,9 @@
                 
                 <div class="cta-section">
                     <button class="order-now-button" onclick="openModal()">Order Now</button>
+                    <button id="load-algeria-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm" onclick="loadWilayaData()" style="display: inline-block;">
+                        🇩🇿 Load Algeria Data
+                    </button>
                     <div class="share-options">
                         <span class="share-label">Share:</span>
                         <div class="share-icons">
@@ -1541,64 +1517,19 @@
         <!-- Related Products -->
         <section class="related-products">
             <h2 class="section-title">You May Also Like</h2>
-            <div class="products-grid">
-                <div class="product-card">
-                    <img src="https://placehold.co/300x200" alt="Wireless Earbuds Pro">
-                    <div class="product-card-content">
-                        <h3>Wireless Earbuds Pro</h3>
-                        <div class="price">$199.99</div>
-                        <div class="rating">★★★★☆ 4.5</div>
-                        <p>Advanced noise-cancelling earbuds with 30hr battery life</p>
-                        <div class="actions">
-                            <button class="btn-primary order-now-related" data-product="wireless-earbuds-pro">Order Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <span class="badge" style="background-color: #28a745;">NEW</span>
-                    <img src="https://placehold.co/300x200" alt="Smart Watch Series 5">
-                    <div class="product-card-content">
-                        <h3>Smart Watch Series 5</h3>
-                        <div class="price">$349.99</div>
-                        <div class="rating">★★★★★ 4.8</div>
-                        <p>Health monitoring, GPS, and 7-day battery</p>
-                        <div class="actions">
-                            <button class="btn-primary">Order Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <span class="badge" style="background-color: #ffc107;">SALE</span>
-                    <img src="https://placehold.co/300x200" alt="Tablet Ultra HD">
-                    <div class="product-card-content">
-                        <h3>Tablet Ultra HD</h3>
-                        <div class="price">$599.99</div>
-                        <div class="rating">★★★★☆ 4.6</div>
-                        <p>10.5-inch display, powerful processor, perfect for work and play</p>
-                        <div class="actions">
-                            <button class="btn-primary order-now-related" data-product="tablet-ultra-hd">Order Now</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <span class="badge" style="background-color: #17a2b8;">POPULAR</span>
-                    <img src="https://placehold.co/300x200" alt="Gaming Headset Pro">
-                    <div class="product-card-content">
-                        <h3>Gaming Headset Pro</h3>
-                        <div class="price">$129.99</div>
-                        <div class="rating">★★★★☆ 4.4</div>
-                        <p>Surround sound, RGB lighting, comfortable design</p>
-                        <div class="actions">
-                            <button class="btn-primary order-now-related" data-product="gaming-headset-pro">Order Now</button>
-                        </div>
-            </div>
+            <div id="related-products-grid" class="products-grid">
+                <div class="col-span-full text-center py-8">
+                    <div class="loading-spinner inline-block"></div>
+                    <p class="mt-2 text-slate-500 dark:text-slate-400">Loading related products...</p>
                 </div>
             </div>
         </section>
         </div>
+
+    <!-- Scroll to top button -->
+    <div id="scroll-to-top" class="scroll-indicator" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-white mt-8 md:mt-16">
@@ -1606,7 +1537,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
                 <!-- Company Info -->
                 <div class="col-span-1 md:col-span-2">
-                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ <span translate="no" class="notranslate">DH Phone</span></h3>
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ DH Phone</h3>
                     <p class="text-sm md:text-base text-gray-300 mb-3 md:mb-4">Your trusted partner for all your phone needs. Quality products, excellent service, and unbeatable prices.</p>
                     <div class="flex space-x-3 md:space-x-4">
                         <!-- Facebook Icon -->
@@ -1651,7 +1582,7 @@
             <div class="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-xs md:text-sm text-gray-400 text-center md:text-left">
-                        © 2024 <span translate="no" class="notranslate">DH Phone</span>. All rights reserved.
+                        © 2024 DH Phone. All rights reserved.
                     </p>
                     <div class="flex items-center space-x-2 mt-3 md:mt-0">
                         <span class="text-xs md:text-sm text-gray-400">Made with</span>
@@ -1664,37 +1595,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Overlay for mobile menu -->
-    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden"></div>
-    <!-- Mobile menu as sliding drawer -->
-    <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-slate-900 shadow-lg z-50 transform translate-x-full transition-transform duration-300 md:hidden">
-      <div class="flex flex-col h-full">
-        <div class="flex items-center justify-between px-4 py-4 border-b border-slate-200 dark:border-slate-700">
-          <span class="text-xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 text-transparent bg-clip-text" data-en="DH Phone" data-fr="DH Téléphone" data-ar="DH Phone">DH Phone</span>
-          <button id="mobile-menu-close" class="text-2xl focus:outline-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">&times;</button>
-        </div>
-        <nav class="flex-1 flex flex-col space-y-2 px-4 py-6">
-          <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
-          <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-          <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-        </nav>
-        <div class="px-4 pb-6">
-          <!-- Mobile Language Dropdown -->
-          <div class="relative">
-            <button id="language-toggle-mobile" class="w-full flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg focus:outline-none">
-              <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-              <i class="fas fa-chevron-down ml-2 text-xs"></i>
-            </button>
-            <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-full bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-20 border border-gray-200 dark:border-slate-600">
-              <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-              <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-              <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Order Modal -->
     <div id="orderModal" class="modal">
@@ -1861,105 +1761,181 @@
     </div>
 
     <script>
-                // Algerian provinces and districts data
+                // Function to load all 58 Wilayas
+        function loadAllWilayas() {
+            const algeriaStatusDiv = document.getElementById('algeria-status');
+            const algeriaIcon = document.getElementById('algeria-icon');
+            const algeriaText = document.getElementById('algeria-text');
+            const loadButton = document.getElementById('load-all-wilayas');
+            
+            if (algeriaStatusDiv) {
+                algeriaIcon.textContent = '🇩🇿';
+                algeriaText.textContent = 'Loading all 58 Wilayas...';
+                if (loadButton) {
+                    loadButton.style.display = 'none';
+                }
+            }
+            
+            // Use the complete list of all 58 Algerian Wilayas
+            algeriaData = allAlgeriaWilayas.map(wilaya => ({
+                wilaya_name: wilaya.wilaya_name,
+                wilaya_name_ar: wilaya.wilaya_name_ar,
+                daira_names: [],
+                daira_names_ar: []
+            }));
+            
+            populateWilayas();
+            
+            if (algeriaStatusDiv) {
+                algeriaIcon.textContent = '✅';
+                algeriaText.textContent = `Loaded all 58 Wilayas successfully!`;
+            }
+            
+            console.log('✅ Loaded all 58 Algerian Wilayas');
+        }
+        
+        // Algerian provinces and districts data
         let algeriaData = [];
+        
+        // Complete list of all 58 Algerian Wilayas
+        const allAlgeriaWilayas = [
+            { "wilaya_name": "Adrar", "wilaya_name_ar": "أدرار" },
+            { "wilaya_name": "Aïn Defla", "wilaya_name_ar": "عين الدفلة" },
+            { "wilaya_name": "Aïn Témouchent", "wilaya_name_ar": "عين تيموشنت" },
+            { "wilaya_name": "Alger", "wilaya_name_ar": "الجزائر" },
+            { "wilaya_name": "Annaba", "wilaya_name_ar": "عنابة" },
+            { "wilaya_name": "Batna", "wilaya_name_ar": "باتنة" },
+            { "wilaya_name": "Béchar", "wilaya_name_ar": "بشار" },
+            { "wilaya_name": "Béjaïa", "wilaya_name_ar": "بجاية" },
+            { "wilaya_name": "Béni Abbès", "wilaya_name_ar": "بني عباس" },
+            { "wilaya_name": "Biskra", "wilaya_name_ar": "بسكرة" },
+            { "wilaya_name": "Blida", "wilaya_name_ar": "البليدة" },
+            { "wilaya_name": "Bordj Badji Mokhtar", "wilaya_name_ar": "برج باجي مختار" },
+            { "wilaya_name": "Bordj Bou Arreridj", "wilaya_name_ar": "برج بوعريريج" },
+            { "wilaya_name": "Bouira", "wilaya_name_ar": "البويرة" },
+            { "wilaya_name": "Boumerdès", "wilaya_name_ar": "بومرداس" },
+            { "wilaya_name": "Chlef", "wilaya_name_ar": "الشلف" },
+            { "wilaya_name": "Constantine", "wilaya_name_ar": "قسنطينة" },
+            { "wilaya_name": "Djanet", "wilaya_name_ar": "جانت" },
+            { "wilaya_name": "Djelfa", "wilaya_name_ar": "الجلفة" },
+            { "wilaya_name": "El Bayadh", "wilaya_name_ar": "البيض" },
+            { "wilaya_name": "El Meghaier", "wilaya_name_ar": "المغير" },
+            { "wilaya_name": "El Menia", "wilaya_name_ar": "المنيعة" },
+            { "wilaya_name": "El Oued", "wilaya_name_ar": "الوادي" },
+            { "wilaya_name": "El Tarf", "wilaya_name_ar": "الطارف" },
+            { "wilaya_name": "Ghardaïa", "wilaya_name_ar": "غرداية" },
+            { "wilaya_name": "Guelma", "wilaya_name_ar": "قالمة" },
+            { "wilaya_name": "Illizi", "wilaya_name_ar": "إليزي" },
+            { "wilaya_name": "In Guezzam", "wilaya_name_ar": "عين قزام" },
+            { "wilaya_name": "In Salah", "wilaya_name_ar": "عين صالح" },
+            { "wilaya_name": "Jijel", "wilaya_name_ar": "جيجل" },
+            { "wilaya_name": "Khenchela", "wilaya_name_ar": "خنشلة" },
+            { "wilaya_name": "Laghouat", "wilaya_name_ar": "الأغواط" },
+            { "wilaya_name": "M'Sila", "wilaya_name_ar": "المسيلة" },
+            { "wilaya_name": "Mascara", "wilaya_name_ar": "معسكر" },
+            { "wilaya_name": "Médéa", "wilaya_name_ar": "المدية" },
+            { "wilaya_name": "Mila", "wilaya_name_ar": "ميلة" },
+            { "wilaya_name": "Mostaganem", "wilaya_name_ar": "مستغانم" },
+            { "wilaya_name": "Naâma", "wilaya_name_ar": "النعامة" },
+            { "wilaya_name": "Oran", "wilaya_name_ar": "وهران" },
+            { "wilaya_name": "Ouargla", "wilaya_name_ar": "ورقلة" },
+            { "wilaya_name": "Ouled Djellal", "wilaya_name_ar": "أولاد جلال" },
+            { "wilaya_name": "Oum El Bouaghi", "wilaya_name_ar": "أم البواقي" },
+            { "wilaya_name": "Relizane", "wilaya_name_ar": "غليزان" },
+            { "wilaya_name": "Saïda", "wilaya_name_ar": "سعيدة" },
+            { "wilaya_name": "Sétif", "wilaya_name_ar": "سطيف" },
+            { "wilaya_name": "Sidi Bel Abbès", "wilaya_name_ar": "سيدي بلعباس" },
+            { "wilaya_name": "Skikda", "wilaya_name_ar": "سكيكدة" },
+            { "wilaya_name": "Souk Ahras", "wilaya_name_ar": "سوق أهراس" },
+            { "wilaya_name": "Tamanrasset", "wilaya_name_ar": "تمنراست" },
+            { "wilaya_name": "Tébessa", "wilaya_name_ar": "تبسة" },
+            { "wilaya_name": "Tiaret", "wilaya_name_ar": "تيارت" },
+            { "wilaya_name": "Timimoun", "wilaya_name_ar": "تيميمون" },
+            { "wilaya_name": "Tindouf", "wilaya_name_ar": "تندوف" },
+            { "wilaya_name": "Tipaza", "wilaya_name_ar": "تيبازة" },
+            { "wilaya_name": "Tissemsilt", "wilaya_name_ar": "تيسمسيلت" },
+            { "wilaya_name": "Tizi Ouzou", "wilaya_name_ar": "تيزي وزو" },
+            { "wilaya_name": "Tlemcen", "wilaya_name_ar": "تلمسان" },
+            { "wilaya_name": "Touggourt", "wilaya_name_ar": "تقرت" }
+        ];
 
         // Function to load Wilaya data from the algeria-cities repository
         async function loadWilayaData() {
+            const algeriaStatusDiv = document.getElementById('algeria-status');
+            const algeriaIcon = document.getElementById('algeria-icon');
+            const algeriaText = document.getElementById('algeria-text');
+            
+            if (algeriaStatusDiv) {
+                algeriaStatusDiv.style.display = 'block';
+                algeriaIcon.textContent = '🇩🇿';
+                algeriaText.textContent = 'Loading Algeria data...';
+            }
+            
             try {
-                // Use a comprehensive local dataset for reliability
-                algeriaData = [
-                    { 
-                        "wilaya_name": "Adrar", 
-                        "wilaya_name_ar": "أدرار",
-                        "daira_names": ["Adrar", "Aoulef", "Aoulef El Arab", "Bordj Badji Mokhtar", "Reggane", "Timimoun", "Zaouiet Kounta"],
-                        "daira_names_ar": ["أدرار", "أولف", "أولف العرب", "برج باجي مختار", "رقان", "تيميمون", "زاوية كنتة"]
-                    },
-                    { 
-                        "wilaya_name": "Chlef", 
-                        "wilaya_name_ar": "الشلف",
-                        "daira_names": ["Abou El Hassan", "Ain Merane", "Benaired", "Boukadir", "Chlef", "El Karimia", "El Marsa", "Oued Fodda", "Ouled Ben Abdelkader", "Ouled Fares", "Tadjena", "Tenes", "Zeboudja"],
-                        "daira_names_ar": ["أبو الحسن", "عين مران", "بن عريد", "بوقادير", "الشلف", "الكريمية", "المرسى", "وادي الفضة", "أولاد بن عبد القادر", "أولاد فارس", "تاجنة", "تنس", "زبوجة"]
-                    },
-                    { 
-                        "wilaya_name": "Laghouat", 
-                        "wilaya_name_ar": "الأغواط",
-                        "daira_names": ["Aflou", "Ain Madhi", "Brida", "El Ghicha", "Gueltat Sidi Saad", "Hassi R'Mel", "Kheneg", "Laghouat", "Oued Morra", "Sidi Makhlouf"],
-                        "daira_names_ar": ["أفلو", "عين ماضي", "بريدة", "الغيشة", "قلتة سيدي سعد", "حاسي الرمل", "الخنق", "الأغواط", "وادي مرة", "سيدي مخلوف"]
-                    },
-                    { 
-                        "wilaya_name": "Oum El Bouaghi", 
-                        "wilaya_name_ar": "أم البواقي",
-                        "daira_names": ["Ain Beida", "Ain Fakroun", "Ain Kercha", "Ain M'lila", "Dhalaa", "F'Kirina", "Ksar Sbahi", "Meskiana", "Oum El Bouaghi", "Sigus", "Souk Naamane"],
-                        "daira_names_ar": ["عين البيضاء", "عين فكرون", "عين كرشة", "عين مليلة", "الضلعة", "فكيرينة", "قصر الصباحي", "مسكيانة", "أم البواقي", "سيقوس", "سوق نعمان"]
-                    },
-                    { "wilaya_name": "Batna", "daira_names": ["Ain Djasser", "Ain Touta", "Arris", "Barika", "Batna", "Bouzina", "Chemora", "Djezzar", "El Madher", "Ichmoul", "Menaa", "Merouana", "N'Gaous", "Ouled Salem", "Ras El Aioun", "Seggana", "Seriana", "T'Kout", "Tazoult", "Theniet El Abed", "Timgad"] },
-                    { "wilaya_name": "Bejaia", "daira_names": ["Adekar", "Akbou", "Amizour", "Aokas", "Barbacha", "Bejaia", "Beni Maouche", "Chemini", "Darguina", "El Kseur", "Ifri-Ouzellaguen", "Ighil Ali", "Kherrata", "Seddouk", "Sidi Aich", "Souk El Tenine", "Tazmalt", "Timezrit"] },
-                    { "wilaya_name": "Biskra", "daira_names": ["Biskra", "Djemorah", "El Kantara", "El Outaya", "M'Chouneche", "Ouled Djellal", "Sidi Khaled", "Sidi Okba", "Tolga", "Zeribet El Oued"] },
-                    { "wilaya_name": "Bechar", "daira_names": ["Abadla", "Bechar", "Beni Abbes", "Beni Ounif", "El Ouata", "Igli", "Kenadsa", "Kerzaz", "Lahmar", "Ouled Khodeir", "Tabalbala", "Taghit"] },
-                    { "wilaya_name": "Blida", "daira_names": ["Blida", "Boufarik", "Bouinan", "Boumerdes", "Chiffa", "El Affroun", "Larbaa", "Meftah", "Mouzaia", "Oued Alleug", "Ouled Yaich"] },
-                    { "wilaya_name": "Bouira", "daira_names": ["Ain Bessem", "Bechloul", "Bir Ghbalou", "Bordj Okhriss", "Bouira", "El Asnam", "El Hachimia", "El Mokrani", "Haizer", "Kadiria", "Lakhdaria", "M'Chedallah", "Souk El Khemis"] },
-                    { "wilaya_name": "Tamanrasset", "daira_names": ["Abalessa", "In Ghar", "In Guezzam", "In Salah", "Tamanrasset", "Tin Zaouatine"] },
-                    { "wilaya_name": "Tebessa", "daira_names": ["Bir El Ater", "Bir Mokadem", "Cheria", "El Aouinet", "El Kouif", "El Ma Labiodh", "El Ogla", "Morsott", "Negrine", "Ouenza", "Oum Ali", "Tebessa"] },
-                    { "wilaya_name": "Tlemcen", "daira_names": ["Ain Tallout", "Bab El Assa", "Bensekrane", "Bouhlou", "Chetouane", "Fellaoucene", "Ghouazi", "Hennaya", "Maghnia", "Marsa Ben M'Hidi", "Nedroma", "Ouled Mimoun", "Remchi", "Sabra", "Sebbaa Chioukh", "Sidi Djillali", "Tlemcen"] },
-                    { "wilaya_name": "Tiaret", "daira_names": ["Ain Deheb", "Ain Kermes", "Dahmouni", "Frenda", "Hamadia", "Ksar Chellala", "Mahdia", "Mechraa Sfa", "Medrissa", "Naima", "Oued Lili", "Rahouia", "Sogueur", "Tiaret"] },
-                    { "wilaya_name": "Tizi Ouzou", "daira_names": ["Ain El Hammam", "Azazga", "Azefoun", "Beni Douala", "Beni Yenni", "Boghni", "Bouzeguene", "Draa Ben Khedda", "Draa El Mizan", "Freha", "Iferhounene", "Larba Nath Irathen", "Maatkas", "Makouda", "Mekla", "Ouacif", "Ouaguenoun", "Tigzirt", "Tizi Gheniff", "Tizi Ouzou", "Yakouren"] },
-                    { 
-                        "wilaya_name": "Alger", 
-                        "wilaya_name_ar": "الجزائر",
-                        "daira_names": ["Alger Centre", "Bab El Oued", "Baraki", "Bir Mourad Rais", "Birkhadem", "Birtouta", "Bouzaréah", "Chéraga", "Dar El Beida", "Djasr Kasentina", "Draria", "El Biar", "El Harrach", "El Madania", "El Magharia", "Hussein Dey", "Kouba", "Mohammadia", "Oued Koriche", "Oued Smar", "Rais Hamidou", "Saoula", "Sidi M'Hamed", "Staoueli", "Zeralda"],
-                        "daira_names_ar": ["الجزائر الوسطى", "باب الوادي", "براقي", "بئر مراد رايس", "بئر خادم", "بئر توتة", "بوزريعة", "الشراقة", "دار البيضاء", "جسر قسنطينة", "الدرارية", "البيار", "الحراش", "المدنية", "المغارية", "حسين داي", "القبة", "المحمدية", "وادي قريش", "وادي سمار", "رئيس حميدو", "سحاولة", "سيدي محمد", "سطاوالي", "زرالدة"]
-                    },
-                    { "wilaya_name": "Djelfa", "daira_names": ["Ain El Ibel", "Ain Oussera", "Birine", "Charef", "Dar Chioukh", "Djelfa", "El Idrissia", "Faidh El Botma", "Hassi Bahbah", "Messaad", "Sidi Ladjel"] },
-                    { "wilaya_name": "Jijel", "daira_names": ["Chekfa", "El Ancer", "El Aouana", "Jijel", "Kaous", "Milia", "Ouled Rabah", "Settara", "Sidi Maarouf", "Taher", "Texenna", "Ziama Mansouriah"] },
-                    { "wilaya_name": "Setif", "daira_names": ["Ain Arnat", "Ain Azel", "Ain El Kebira", "Ain Oulmene", "Amoucha", "Babor", "Bouandas", "Bougaa", "El Eulma", "Guelta Zerka", "Hammam Guergour", "Hammam Soukhna", "Maoklane", "Salim", "Setif", "Tachouda", "Tala Ifacene"] },
-                    { "wilaya_name": "Saida", "daira_names": ["Ain El Hadjar", "Ain Sekhouna", "El Hassasna", "Ouled Brahim", "Saida", "Sidi Boubekeur", "Youb"] },
-                    { "wilaya_name": "Skikda", "daira_names": ["Ain Kechra", "Ain Zouit", "Azzaba", "Ben Azzouz", "Collo", "El Hadaik", "El Harrouch", "El Marsa", "Oued Zehour", "Ouled Attia", "Ouled Habbaba", "Ramdane Djamel", "Sidi Mezghiche", "Skikda", "Tamalous", "Zitouna"] },
-                    { "wilaya_name": "Sidi Bel Abbes", "daira_names": ["Ain El Berd", "Ain Kada", "Ain Thrid", "Belarbi", "Ben Badis", "Dhaya", "El Hacaiba", "Hassi Zehana", "M'Cid", "Merine", "Mostefa Ben Brahim", "Moulay Slissen", "Oued Sefioun", "Oued Taourira", "Ras El Ma", "Sfisef", "Sidi Ali Boussidi", "Sidi Bel Abbes", "Sidi Lahcene", "Telagh", "Tenira", "Tessala"] },
-                    { "wilaya_name": "Annaba", "daira_names": ["Annaba", "Ain El Berda", "El Hadjar", "El Bouni", "Oued El Aneb", "Seraidi", "Chetaibi", "Sidi Amar"] },
-                    { "wilaya_name": "Guelma", "daira_names": ["Ain Ben Beida", "Ain Larbi", "Ain Makhlouf", "Ain Reggada", "Belkheir", "Bordj Sabath", "Bou Hachana", "Bou Hamdane", "Bouati Mahmoud", "Dahouara", "Djeballah Khemissi", "El Fedjoudj", "Guelma", "Hammam Debagh", "Hammam N'Bails", "Heliopolis", "Kheirane", "Medjez Amar", "Medjez Sfa", "Nechmaya", "Oued Cheham", "Oued Fragha", "Oued Zenati", "Ras El Agba", "Tamlouka"] },
-                    { 
-                        "wilaya_name": "Constantine", 
-                        "wilaya_name_ar": "قسنطينة",
-                        "daira_names": ["Ain Abid", "Ain Smara", "Beni Hamiden", "Constantine", "Didouche Mourad", "El Khroub", "Hamma Bouziane", "Ibn Ziad", "Messaoud Boudjeriou", "Ouled Rahmoune", "Zighoud Youcef"],
-                        "daira_names_ar": ["عين عبيد", "عين سمارة", "بني حميدان", "قسنطينة", "ديدوش مراد", "الخروب", "حمام بو زيان", "ابن زياد", "مسعود بوجريو", "أولاد رحمون", "زيغود يوسف"]
-                    },
-                    { "wilaya_name": "Medea", "daira_names": ["Ain Boucif", "Aziz", "Beni Slimane", "Berrouaghia", "Chahbounia", "Chellalat El Adhaoura", "El Azizia", "El Omaria", "Guerrouma", "Ksar El Boukhari", "Medea", "Ouled Antar", "Ouzera", "Seghouane", "Si Mahdjoub", "Sidi Naamane", "Souagui", "Tablat"] },
-                    { "wilaya_name": "Mostaganem", "daira_names": ["Ain Nouissi", "Ain Sidi Cherif", "Ain Tedeles", "Bouguirat", "Hassi Mameche", "Kheir Eddine", "Mesra", "Mostaganem", "Sidi Ali", "Sidi Lakhdar"] },
-                    { "wilaya_name": "M'Sila", "daira_names": ["Ain El Hadjel", "Ain El Melh", "Ain Fares", "Ain Khadra", "Ain Rich", "Ben Srour", "Bou Saada", "Chellal", "Djebel Messaad", "El Hamel", "El Houamed", "Hammam Dhalaa", "Khoubana", "Maadid", "Magra", "M'Sila", "Ouled Addi Guebala", "Ouled Derradj", "Ouled Mansour", "Ouled Sidi Brahim", "Sidi Aissa", "Sidi Hadjeres", "Sidi M'Hamed", "Slim", "Tarmount"] },
-                    { "wilaya_name": "Mascara", "daira_names": ["Ain Fares", "Ain Fekan", "Ain Fras", "Aouf", "Beniane", "Bou Hanifia", "El Bordj", "El Gaada", "El Ghomri", "El Keurt", "Ferraguig", "Froha", "Gharrous", "Ghriss", "Guerdjoum", "Hachem", "Khalouia", "Makdha", "Mamounia", "Mascara", "Matemore", "Mocta Douz", "Mohammedia", "Oggaz", "Oued El Abtal", "Oued Taria", "Ras Ain Amirouche", "Sedjerara", "Sehailia", "Sidi Abdelmoumen", "Sidi Boussaid", "Sidi Kada", "Sig", "Tighennif", "Tizi", "Zahana", "Zelameta"] },
-                    { "wilaya_name": "Ouargla", "daira_names": ["Ain Beida", "El Borma", "El Hadjira", "El Ouata", "Hassi Messaoud", "M'Gaid", "N'Goussa", "Ouargla", "Rouissat", "Sidi Khouiled", "Taibet", "Temacine", "Touggourt"] },
-                    { 
-                        "wilaya_name": "Oran", 
-                        "wilaya_name_ar": "وهران",
-                        "daira_names": ["Ain El Turk", "Arzew", "Bethioua", "Bir El Djir", "Boutlelis", "El Ancor", "El Braya", "Es Senia", "Gdyel", "Hassi Bounif", "Hassi Mefsoukh", "Mers El Kebir", "Misserghin", "Oran", "Oued Tlelat", "Sig"],
-                        "daira_names_ar": ["عين الترك", "أرزيو", "بطيوة", "بئر الجير", "بوتليليس", "العنصر", "البريا", "السانية", "قديل", "حاسي بن عقبة", "حاسي مفسوخ", "مرسى الكبير", "مسرغين", "وهران", "وادي تليلات", "سيق"]
-                    },
-                    { "wilaya_name": "El Bayadh", "daira_names": ["Boualem", "Bougtob", "Brezina", "Cheguig", "El Abiodh Sidi Cheikh", "El Bayadh", "El Kheither", "Kef El Ahmar", "Rogassa"] },
-                    { "wilaya_name": "Illizi", "daira_names": ["Debdeb", "Djanet", "Illizi", "In Amenas"] },
-                    { "wilaya_name": "Bordj Bou Arreridj", "daira_names": ["Ain Taghrout", "Belimour", "Ben Daoud", "Bir Kasdali", "Bordj Bou Arreridj", "Bordj Ghdir", "Bordj Zemoura", "Colla", "Djaafra", "El Ach", "El Achir", "El Anseur", "El Hamadia", "El M'hir", "Haraza", "Hasnaoua", "Khelil", "Ksour", "Mansoura", "Medjana", "Ouled Brahem", "Ouled Dahmane", "Ouled Sidi Brahim", "Rabta", "Ras El Oued", "Sidi Embarek", "Tafreg", "Taglait", "Teniet En Nasr"] },
-                    { "wilaya_name": "Boumerdes", "daira_names": ["Baghlia", "Bordj Menaiel", "Boudouaou", "Boumerdes", "Dellys", "Isser", "Khemis El Khechna", "Naciria", "Thenia"] },
-                    { "wilaya_name": "El Tarf", "daira_names": ["Ben M'Hidi", "Besbes", "Bouhadjar", "Bouteldja", "Dréan", "El Kala", "El Tarf", "Hammam Beni Salah"] },
-                    { "wilaya_name": "Tindouf", "daira_names": ["Tindouf"] },
-                    { "wilaya_name": "Tissemsilt", "daira_names": ["Ammari", "Bordj Bounaama", "Bordj El Emir Abdelkader", "Khemisti", "Lardjem", "Lazharia", "Theniet El Had", "Tissemsilt"] },
-                    { "wilaya_name": "El Oued", "daira_names": ["Bayadha", "Debila", "Djamaa", "Douar El Ma", "El M'Ghair", "El Oued", "Guemar", "Hassani Abdelkrim", "Kouinine", "Magrane", "Mih Ouansa", "Nakhla", "Oued El Alenda", "Oum Touyour", "Reguiba", "Robbah", "Sidi Amrane", "Sidi Khellil", "Still", "Taghzout", "Taleb Larbi", "Tendla", "Trifaoui"] },
-                    { "wilaya_name": "Khenchela", "daira_names": ["Ain Touila", "Babar", "Bouhmama", "Chelia", "Djellal", "El Hamma", "Ensigha", "Fais", "Kais", "Khenchela", "Khirane", "M'Sara", "Ouled Rechache", "Remila", "Tamza", "Yabous"] },
-                    { "wilaya_name": "Souk Ahras", "daira_names": ["Ain Zana", "Ain Soltane", "Bir Bouhouche", "Drea", "Haddada", "Hanencha", "Khedara", "Khemissa", "M'Daourouch", "Machroha", "Merahna", "Oued Keberit", "Ouled Driss", "Ouled Moumen", "Oum El Adhaim", "Ragouba", "Safel El Ouiden", "Sedrata", "Sidi Fredj", "Souk Ahras", "Taoura", "Terraguelt", "Tiffech", "Zaarouria"] },
-                    { "wilaya_name": "Tipaza", "daira_names": ["Ahmer El Ain", "Ain Tagourait", "Attatba", "Bou Ismaiel", "Bouharoun", "Bourkika", "Chaiba", "Cherchell", "Damous", "Douaouda", "Fouka", "Gouraya", "Hadjout", "Koléa", "Larhat", "Menaceur", "Messelmoun", "Nador", "Sidi Amar", "Sidi Ghiles", "Sidi Rached", "Tipaza"] },
-                    { "wilaya_name": "Mila", "daira_names": ["Ain Beida Harriche", "Ain Mellouk", "Ain Tine", "Amira Arras", "Benyahia Abderrahmane", "Bouhatem", "Chelghoum Laid", "Chigara", "Derradji Bousselah", "El Mechira", "Ferdjioua", "Grarem Gouga", "Hamala", "Mila", "Minar Zarza", "Oued Athmania", "Oued Endja", "Oued Seguen", "Ouled Khalouf", "Rouached", "Sidi Khelifa", "Sidi Merouane", "Tadjenanet", "Tassadane Haddada", "Teleghma", "Terrai Bainen", "Tiberguent", "Yahia Beniguecha", "Zeghaia"] },
-                    { "wilaya_name": "Ain Defla", "daira_names": ["Ain Benian", "Ain Defla", "Ain Lechiakh", "Ain Soltane", "Ain Torki", "Arib", "Bathia", "Belaas", "Ben Allal", "Bir Ould Khelifa", "Bordj Emir Khaled", "Boumedfaa", "Bourached", "Djelida", "Djemaa Ouled Cheikh", "El Abadia", "El Amra", "El Attaf", "El Hassania", "El Maine", "Hammam Righa", "Hoceinia", "Khemis Miliana", "Mekhatria", "Miliana", "Oued Chorfa", "Oued Djemaa", "Rouina", "Sidi Lakhdar", "Tacheta Zegagha", "Tarik Ibn Ziad", "Tiberkanine", "Zeddine"] },
-                    { "wilaya_name": "Naama", "daira_names": ["Ain Ben Khelil", "Ain Sefra", "Asla", "Djeniene Bourezg", "El Biod", "Kasdir", "Mecheria", "Moghrar", "Naama", "Sfissifa", "Tiout"] },
-                    { "wilaya_name": "Ain Temouchent", "daira_names": ["Ain Kihal", "Ain Larbaa", "Ain Temouchent", "Aoubellil", "Beni Saf", "Bou Zedjar", "Chaabet El Ham", "Chentouf", "El Amria", "El Malah", "El Messaid", "Hammam Bou Hadjar", "Hassasna", "Oued Berkeche", "Oued Sabah", "Ouled Boudjemaa", "Ouled Kihal", "Oulhaca El Gheraba", "Sidi Ben Adda", "Sidi Boumediene", "Sidi Ouriache", "Sidi Safi", "Tamzoura", "Terga"] },
-                    { "wilaya_name": "Ghardaia", "daira_names": ["Berriane", "Dhayet Bendhahoua", "El Atteuf", "El Guerrara", "Ghardaia", "Metlili", "Sebseb", "Zelfana"] },
-                    { "wilaya_name": "Relizane", "daira_names": ["Ain Rahma", "Ammi Moussa", "Belaassel Bouzagza", "Beni Dergoun", "Beni Zentis", "Dar Ben Abdellah", "Djidiouia", "El H'Madna", "El Matmar", "Es Sebt", "Had Echkalla", "Hamri", "Kalaa", "Lahlef", "Mazouna", "Mediouna", "Mendes", "Oued Essalem", "Ouarizane", "Oued Rhiou", "Ouled Aiche", "Ouled Sidi Mihoub", "Ramka", "Relizane", "Sidi M'Hamed Ben Ali", "Sidi Saada", "Souk El Had", "Yellel", "Zemmora"] }
-                ];
+                // Try different URLs for the algeria-cities repository
+                let response;
+                try {
+                    response = await fetch('https://raw.githubusercontent.com/othmanus/algeria-cities/master/json/algeria-cities.json');
+                } catch (e) {
+                    response = await fetch('https://raw.githubusercontent.com/othmanus/algeria-cities/master/json/ascii/algeria-cities.json');
+                }
                 
-                console.log('Loaded comprehensive Algeria data:', algeriaData.length, 'wilayas');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Transform the data to match our expected format
+                algeriaData = data.map(wilaya => {
+                    // Handle different possible data structures
+                    let daira_names = [];
+                    let daira_names_ar = [];
+                    
+                    if (wilaya.dairas && Array.isArray(wilaya.dairas)) {
+                        daira_names = wilaya.dairas.map(daira => daira.daira_name || daira.name || '');
+                        daira_names_ar = wilaya.dairas.map(daira => daira.daira_name_ar || daira.name_ar || '');
+                    } else if (wilaya.daira_names && Array.isArray(wilaya.daira_names)) {
+                        daira_names = wilaya.daira_names;
+                        daira_names_ar = wilaya.daira_names_ar || [];
+                    }
+                    
+                    return {
+                        wilaya_name: wilaya.wilaya_name || wilaya.name || '',
+                        wilaya_name_ar: wilaya.wilaya_name_ar || wilaya.name_ar || '',
+                        daira_names: daira_names,
+                        daira_names_ar: daira_names_ar
+                    };
+                });
+                
                 populateWilayas();
                 
+                // Show success status
+                if (algeriaStatusDiv) {
+                    algeriaIcon.textContent = '✅';
+                    algeriaText.textContent = `Loaded ${algeriaData.length} wilayas from GitHub`;
+                }
+                
             } catch (error) {
-                console.error('Error loading Wilaya data:', error);
-                // Even if there's an error, we still have the comprehensive dataset above
+                // Show error status and provide option to load all Wilayas
+                if (algeriaStatusDiv) {
+                    algeriaIcon.textContent = '❌';
+                    algeriaText.textContent = `API Error: ${error.message}`;
+                    
+                    // Show the button to load all Wilayas
+                    const loadButton = document.getElementById('load-all-wilayas');
+                    if (loadButton) {
+                        loadButton.style.display = 'inline-block';
+                    }
+                }
+                
+                // Use basic fallback with just Wilaya names
+                algeriaData = allAlgeriaWilayas.map(wilaya => ({
+                    wilaya_name: wilaya.wilaya_name,
+                    wilaya_name_ar: wilaya.wilaya_name_ar,
+                    daira_names: [],
+                    daira_names_ar: []
+                }));
                 populateWilayas();
             }
         }
@@ -2061,177 +2037,1374 @@
             });
             
             // Validate full name
-
-    </script>
-    <script>
-         
-    </script>
-    <script src="index.js" defer></script>
-    <script>
-        // Language toggle functionality (reusable)
-        (function() {
-            let langToggle, langDropdown, langToggleMobile, langDropdownMobile;
-            const html = document.documentElement;
+            const fullName = document.getElementById('fullName');
+            if (!fullName.value.trim()) {
+                showError('fullName', 'Please enter your full name');
+                isValid = false;
+            }
             
-            function setLang(language) {
-                if (language === 'ar') {
-                    html.setAttribute('lang', 'ar');
-                    html.setAttribute('dir', 'rtl');
-                    localStorage.setItem('lang', 'ar');
-                } else if (language === 'fr') {
-                    html.setAttribute('lang', 'fr');
-                    html.setAttribute('dir', 'ltr');
-                    localStorage.setItem('lang', 'fr');
+            // Validate email
+            const email = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim()) {
+                showError('email', 'Please enter your email address');
+                isValid = false;
+            } else if (!emailRegex.test(email.value)) {
+                showError('email', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+                        // Validate phone (Algerian format: 05, 06, 07 for mobile or 02, 03 for landline)
+            const phone = document.getElementById('phone');
+            const phoneRegex = /^(0)(2|3|5|6|7)[0-9]{8}$/;
+            const phoneValue = phone.value.replace(/\s+/g, '');
+            if (!phoneValue) {
+                showError('phone', 'Please enter your phone number');
+                isValid = false;
+            } else if (!phoneRegex.test(phoneValue)) {
+                showError('phone', 'Please enter a valid Algerian phone number (05/06/07 for mobile or 02/03 for landline)');
+                isValid = false;
+            }
+            
+            // Validate wilaya
+            const wilaya = document.getElementById('wilaya');
+            if (!wilaya.value) {
+                showError('wilaya', 'Please select your wilaya');
+                isValid = false;
+            }
+            
+            // Validate daira
+            const daira = document.getElementById('daira');
+            if (!daira.value) {
+                showError('daira', 'Please select your daïra');
+                isValid = false;
+            }
+            
+            // Scroll to first error if any
+            if (!isValid) {
+                const firstError = document.querySelector('.border-red-500');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+            
+            return isValid;
+        }
+
+        // Helper function to show error messages
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(`${fieldId}Error`);
+            const inputElement = document.getElementById(fieldId);
+            
+            if (errorElement && inputElement) {
+                errorElement.textContent = message;
+                errorElement.classList.remove('hidden');
+                inputElement.classList.add('border-red-500', 'ring-2', 'ring-red-200');
+                inputElement.focus();
+            }
+        }
+
+        // Enhanced form submission with EmailJS
+        async function submitForm(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+
+            // Show loading state
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+
+            // Get current product information
+            const productTitle = document.querySelector('.product-title')?.textContent || 'Product';
+            const productPrice = document.querySelector('.price')?.textContent || 'Contact for price';
+
+            // Prepare form data object
+            const formData = {
+                full_name: document.getElementById('fullName').value,
+                user_email: document.getElementById('email').value,
+                phone_number: document.getElementById('phone').value,
+                wilaya: document.getElementById('wilaya').value,
+                daira: document.getElementById('daira').value,
+                product: productTitle,
+                product_price: productPrice,
+                timestamp: new Date().toLocaleString()
+            };
+
+            // Telegram Bot API integration
+            const botToken = '7933495075:AAH2tvwxLUsSXtM4UzkSgSq4cb65k6qhSEI';
+            // DH-PHONE group chat ID
+            const chatId = '-1002894581286';
+            const text = `New Order Submission:%0AName: ${formData.full_name}%0AEmail: ${formData.user_email}%0APhone: ${formData.phone_number}%0AWilaya: ${formData.wilaya}%0ADaira: ${formData.daira}%0AProduct: ${formData.product}%0APrice: ${formData.product_price}%0ATime: ${formData.timestamp}`;
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`;
+
+            try {
+                const response = await fetch(url, { method: 'GET' });
+                if (response.ok) {
+                    document.getElementById('orderForm').reset();
+                    document.getElementById('successMessage').classList.remove('hidden');
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('orderForm').classList.add('hidden');
+                    setTimeout(() => {
+                        document.getElementById('successMessage').classList.add('hidden');
+                        document.getElementById('orderForm').classList.remove('hidden');
+                        closeModal();
+                    }, 5000);
                 } else {
-                    html.setAttribute('lang', 'en');
-                    html.setAttribute('dir', 'ltr');
-                    localStorage.setItem('lang', 'en');
+                    throw new Error('Telegram API returned error');
                 }
-                
-                // Update language display in toggle buttons
-                const langToggleSpan = document.querySelector('#language-toggle span');
-                const langToggleMobileSpan = document.querySelector('#language-toggle-mobile span');
-                
-                if (langToggleSpan) {
-                    langToggleSpan.textContent = language.toUpperCase();
+            } catch (error) {
+                console.error('Telegram send failed:', error);
+                let errorMessage = 'An error occurred while sending your message. Please try again later.';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Submission Failed',
+                    text: errorMessage,
+                    confirmButtonColor: '#3b82f6',
+                    footer: 'Error code: ' + (error.status || 'UNKNOWN')
+                });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Submit Order';
+            }
+        }
+
+
+
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tabbuttons;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tabbuttons = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tabbuttons.length; i++) {
+                tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Modal functionality
+        function openModal() {
+            document.getElementById("orderModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("orderModal").style.display = "none";
+            // Reset form when modal closes
+            document.getElementById("orderForm").reset();
+            document.getElementById("successMessage").classList.add("hidden");
+            document.getElementById("orderForm").classList.remove("hidden");
+            // Reset error states
+            document.querySelectorAll('[id$="Error"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.querySelectorAll('.border-red-500').forEach(el => {
+                el.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
+            });
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById("orderModal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        };
+
+        // Image gallery functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Shopify first
+            initializeShopify();
+            
+            // Force load Shopify products immediately
+            loadShopifyProducts();
+            
+            // Force load Algeria data immediately
+            loadWilayaData();
+            
+            const mainImage = document.querySelector('.main-image');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+
+            thumbnails.forEach(thumbnail => {
+                thumbnail.addEventListener('click', function() {
+                    mainImage.src = this.src;
+                    // Update active state
+                    thumbnails.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Mobile slider functionality
+            const sliderTrack = document.querySelector('.slider-track');
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.querySelector('.slider-prev');
+            const nextBtn = document.querySelector('.slider-next');
+            const dots = document.querySelectorAll('.dot');
+            let currentIndex = 0;
+
+            function updateSlider() {
+                sliderTrack.style.transform = `translateX(-${currentIndex * 100}%)`;
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateSlider();
+            });
+
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateSlider();
+            });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    currentIndex = parseInt(dot.dataset.slide);
+                    updateSlider();
+                });
+            });
+
+            // Initialize form
+            document.getElementById('orderForm').addEventListener('submit', submitForm);
+            document.getElementById('wilaya').addEventListener('change', updateDairas);
+            
+            // Load Wilaya data
+            loadWilayaData();
+        });
+
+        // Load product data from Shopify and Firebase
+        document.addEventListener('firebaseReady', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productHandle = urlParams.get('product');
+
+            // Test Shopify connection first
+            const connectionTest = await testShopifyConnection();
+            
+            if (connectionTest) {
+                // Load Shopify products automatically
+                await loadShopifyProducts();
+            } else {
+                // Load sample data as fallback
+                if (productHandle) {
+                    loadSampleProductData(productHandle);
+                } else {
+                    loadSampleProductData('default-product');
                 }
-                if (langToggleMobileSpan) {
-                    langToggleMobileSpan.textContent = language.toUpperCase();
-                }
+            }
+        });
+
+        // Function to load all Shopify products
+        async function loadAllShopifyProducts() {
+            // Initialize Shopify if not already done
+            if (!shopifyEndpoint) {
+                initializeShopify();
+            }
+            
+            if (!shopifyEndpoint) {
+                console.error('❌ Shopify not initialized');
+                return [];
+            }
+            
+            try {
+                console.log('📦 Loading all Shopify products...');
                 
-                // Update all translatable elements
-                document.querySelectorAll('[data-' + language + ']').forEach(element => {
-                    const text = element.getAttribute('data-' + language);
+                const query = `
+                    query getProducts($first: Int!) {
+                        products(first: $first) {
+                            edges {
+                                node {
+                                    id
+                                    title
+                                    handle
+                                    description
+                                    productType
+                                    tags
+                                    priceRange {
+                                        minVariantPrice {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                    images(first: 5) {
+                                        edges {
+                                            node {
+                                                url
+                                                altText
+                                            }
+                                        }
+                                    }
+                                    variants(first: 1) {
+                                        edges {
+                                            node {
+                                                availableForSale
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `;
+
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: { first: 20 }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.errors) {
+                    return [];
+                }
+
+                if (data.data && data.data.products) {
+                    const products = data.data.products.edges.map(edge => edge.node);
+                    return products;
+                }
+
+                return [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        // Also load Shopify products immediately if no Firebase
+        if (!window.firebaseReady) {
+            loadShopifyProducts();
+        }
+
+        // Function to refresh form language when site language changes
+        function refreshFormLanguage() {
+            populateWilayas();
+            updateDairas();
+        }
+
+        // Language dropdown functionality
+        const languageToggle = document.getElementById('language-toggle');
+        const languageDropdown = document.getElementById('language-dropdown');
+        const languageToggleMobile = document.getElementById('language-toggle-mobile');
+        const languageDropdownMobile = document.getElementById('language-dropdown-mobile');
+
+        if (languageToggle && languageDropdown) {
+            languageToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                languageDropdown.classList.toggle('hidden');
+                if (languageDropdownMobile) languageDropdownMobile.classList.add('hidden');
+            });
+        }
+
+        if (languageToggleMobile && languageDropdownMobile) {
+            languageToggleMobile.addEventListener('click', (e) => {
+                e.stopPropagation();
+                languageDropdownMobile.classList.toggle('hidden');
+                if (languageDropdown) languageDropdown.classList.add('hidden');
+            });
+        }
+
+        // Language selection
+        document.querySelectorAll('.lang-option').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const selectedLang = e.target.getAttribute('data-lang');
+                const langCode = selectedLang.toUpperCase();
+
+                // Update language display
+                document.querySelectorAll('#language-toggle span, #language-toggle-mobile span').forEach(span => {
+                    span.textContent = langCode;
+                });
+
+                // Set document language and direction
+                document.documentElement.lang = selectedLang;
+                if (selectedLang === 'ar') {
+                    document.documentElement.dir = 'rtl';
+                } else {
+                    document.documentElement.dir = 'ltr';
+                }
+
+                // Update all elements with data-lang attributes
+                document.querySelectorAll('[data-lang]').forEach(element => {
+                    const text = element.getAttribute(`data-${selectedLang}`);
                     if (text) {
                         element.textContent = text;
                     }
                 });
-            }
-            
-            function closeLangDropdown() {
-                if (langDropdown) {
-                    langDropdown.classList.add('hidden');
-                    langToggle.setAttribute('aria-expanded', 'false');
-                }
-                if (langDropdownMobile) {
-                    langDropdownMobile.classList.add('hidden');
-                }
-            }
-            
-            function openLangDropdown() {
-                if (langDropdown) {
-                    langDropdown.classList.remove('hidden');
-                    langToggle.setAttribute('aria-expanded', 'true');
-                }
-            }
-            
-            function initLanguageToggle() {
-                // Get elements
-                langToggle = document.getElementById('language-toggle');
-                langDropdown = document.getElementById('language-dropdown');
-                langToggleMobile = document.getElementById('language-toggle-mobile');
-                langDropdownMobile = document.getElementById('language-dropdown-mobile');
-                
-                // Set initial language
-                const savedLang = localStorage.getItem('lang') || 'en';
-                setLang(savedLang);
-                
-                // Desktop language toggle
-                if (langToggle && langDropdown) {
-                    langToggle.setAttribute('aria-haspopup', 'listbox');
-                    langToggle.setAttribute('aria-expanded', 'false');
-                    langDropdown.setAttribute('role', 'listbox');
-                    
-                    langToggle.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        if (langDropdown.classList.contains('hidden')) {
-                            openLangDropdown();
-                        } else {
-                            closeLangDropdown();
-                        }
-                    });
-                    
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', function(e) {
-                        if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
-                            closeLangDropdown();
-                        }
-                    });
-                    
-                    // Keyboard navigation
-                    langToggle.addEventListener('keydown', function(e) {
-                        if (e.key === 'Escape') {
-                            closeLangDropdown();
-                        } else if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            openLangDropdown();
-                            const firstOption = langDropdown.querySelector('.lang-option');
-                            if (firstOption) firstOption.focus();
-                        }
-                    });
-                    
-                    // Language option selection
-                    langDropdown.querySelectorAll('.lang-option').forEach(option => {
-                        option.setAttribute('tabindex', '0');
-                        option.addEventListener('click', function() {
-                            const selectedLang = this.getAttribute('data-lang');
-                            setLang(selectedLang);
-                            closeLangDropdown();
-                        });
-                        
-                        option.addEventListener('keydown', function(e) {
-                            if (e.key === 'Escape') {
-                                closeLangDropdown();
-                                langToggle.focus();
-                            } else if (e.key === 'ArrowDown') {
-                                e.preventDefault();
-                                const next = this.nextElementSibling;
-                                if (next) next.focus();
-                            } else if (e.key === 'ArrowUp') {
-                                e.preventDefault();
-                                const prev = this.previousElementSibling;
-                                if (prev) prev.focus();
-                                else langToggle.focus();
-                            } else if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                this.click();
-                            }
-                        });
-                    });
+
+                // Refresh form language if modal is open
+                if (document.getElementById('orderModal').style.display === 'flex') {
+                    refreshFormLanguage();
                 }
 
-                // Mobile language toggle
-                if (langToggleMobile && langDropdownMobile) {
-                    langToggleMobile.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        langDropdownMobile.classList.toggle('hidden');
-                    });
+                // Close dropdowns
+                if (languageDropdown) languageDropdown.classList.add('hidden');
+                if (languageDropdownMobile) languageDropdownMobile.classList.add('hidden');
+            });
+        });
 
-                    // Handle mobile language selection
-                    langDropdownMobile.querySelectorAll('.lang-option').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const selectedLang = e.target.getAttribute('data-lang');
-                            setLang(selectedLang);
-                            langDropdownMobile.classList.add('hidden');
-                        });
-                    });
-
-                    // Close mobile dropdown when clicking outside
-                    window.addEventListener('click', function(e) {
-                        if (!langToggleMobile.contains(e.target) && !langDropdownMobile.contains(e.target)) {
-                            langDropdownMobile.classList.add('hidden');
-                        }
-                    });
-                }
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', (e) => {
+            if (languageDropdown && !e.target.closest('#language-toggle') && !e.target.closest('#language-dropdown')) {
+                languageDropdown.classList.add('hidden');
             }
-            
-            // Initialize when DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initLanguageToggle);
+            if (languageDropdownMobile && !e.target.closest('#language-toggle-mobile') && !e.target.closest('#language-dropdown-mobile')) {
+                languageDropdownMobile.classList.add('hidden');
+            }
+        });
+
+        // Shopify Integration - Initialize at the top
+        let shopifyAccessToken, shopDomain, shopifyEndpoint;
+        
+        // Initialize Shopify variables when config is available
+        function initializeShopify() {
+            if (window.config && window.config.shopify) {
+                shopifyAccessToken = window.config.shopify.accessToken;
+                shopDomain = window.config.shopify.domain;
+                shopifyEndpoint = `https://${shopDomain}/api/2024-01/graphql.json`;
+                console.log('✅ Shopify variables initialized');
             } else {
-                initLanguageToggle();
+                console.warn('⚠️ Shopify config not available');
             }
-        })(); 
+        }
+
+        // Comprehensive Shopify diagnostic function
+        async function diagnoseShopifyIssues() {
+            // Test 1: Check configuration
+            // Test 2: Basic connectivity
+            try {
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: `query { shop { name } }`
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.errors) {
+                    // Handle errors silently
+                } else if (data.data && data.data.shop) {
+                    // Connection successful
+                }
+                
+            } catch (error) {
+                // Handle errors silently
+            }
+            
+            // Test 3: Try different API versions
+            const apiVersions = ['2024-01', '2023-10', '2023-07', '2023-04'];
+            
+            for (const version of apiVersions) {
+                try {
+                    const testEndpoint = `https://${shopDomain}/api/${version}/graphql.json`;
+                    
+                    const response = await fetch(testEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                        },
+                        body: JSON.stringify({
+                            query: `query { shop { name } }`
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        break;
+                    }
+                } catch (error) {
+                    // Handle errors silently
+                }
+            }
+        }
+
+        // Test Shopify connection on page load
+        async function testShopifyConnection() {
+            const statusDiv = document.getElementById('shopify-status');
+            const statusIcon = document.getElementById('status-icon');
+            const statusText = document.getElementById('status-text');
+            
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                statusIcon.textContent = '🔍';
+                statusText.textContent = 'Testing Shopify connection...';
+            }
+            
+            try {
+                const testQuery = `
+                    query {
+                        shop {
+                            name
+                            primaryDomain {
+                                url
+                            }
+                        }
+                    }
+                `;
+
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: testQuery
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.errors) {
+                    if (statusDiv) {
+                        statusIcon.textContent = '❌';
+                        statusText.textContent = 'Shopify connection failed - API errors';
+                    }
+                    return false;
+                }
+
+                if (data.data && data.data.shop) {
+                    if (statusDiv) {
+                        statusIcon.textContent = '✅';
+                        statusText.textContent = `Connected to ${data.data.shop.name}`;
+                    }
+                    return true;
+                }
+
+                if (statusDiv) {
+                    statusIcon.textContent = '❌';
+                    statusText.textContent = 'Shopify connection failed - No shop data';
+                }
+                return false;
+            } catch (error) {
+                if (statusDiv) {
+                    statusIcon.textContent = '❌';
+                    statusText.textContent = `Connection failed: ${error.message}`;
+                }
+                return false;
+            }
+        }
+
+
+
+        // Load product from Shopify
+        async function loadShopifyProduct(handle) {
+            try {
+                
+                const query = `
+                    query getProduct($handle: String!) {
+                        product(handle: $handle) {
+                            id
+                            title
+                            handle
+                            description
+                            productType
+                            tags
+                            priceRange {
+                                minVariantPrice {
+                                    amount
+                                    currencyCode
+                                }
+                                maxVariantPrice {
+                                    amount
+                                    currencyCode
+                                }
+                            }
+                            images(first: 10) {
+                                edges {
+                                    node {
+                                        url
+                                        altText
+                                    }
+                                }
+                            }
+                            variants(first: 10) {
+                                edges {
+                                    node {
+                                        id
+                                        title
+                                        availableForSale
+                                        price {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                }
+                            }
+                            options {
+                                name
+                                values
+                            }
+                        }
+                    }
+                `;
+
+                console.log('Sending GraphQL query to Shopify...');
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: { handle: handle }
+                    })
+                });
+
+                console.log('Shopify response status:', response.status);
+                console.log('Shopify response headers:', response.headers);
+
+                if (!response.ok) {
+                    console.error('Shopify HTTP error:', response.status, response.statusText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Shopify API response data:', data);
+                
+                if (data.errors) {
+                    console.error('Shopify API errors:', data.errors);
+                    data.errors.forEach((error, index) => {
+                        console.error(`Error ${index + 1}:`, error.message);
+                        console.error('Error locations:', error.locations);
+                        console.error('Error path:', error.path);
+                    });
+                    return null;
+                }
+
+                if (data.data && data.data.product) {
+                    console.log('✅ Product loaded from Shopify:', data.data.product);
+                    return data.data.product;
+                } else {
+                    console.log('❌ No product data found in response');
+                    return null;
+                }
+
+                return null;
+            } catch (error) {
+                console.error('❌ Error loading product from Shopify:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack
+                });
+                return null;
+            }
+        }
+
+        // Update product display with Shopify data
+        function updateProductDisplay(product) {
+            // Update product title
+            const titleElement = document.querySelector('.product-title');
+            if (titleElement) {
+                titleElement.textContent = product.title;
+            }
+
+            // Update product price
+            const priceElement = document.querySelector('.price');
+            if (priceElement && product.priceRange) {
+                const minPrice = product.priceRange.minVariantPrice;
+                const maxPrice = product.priceRange.maxVariantPrice;
+                
+                if (minPrice && maxPrice && minPrice.amount !== maxPrice.amount) {
+                    priceElement.innerHTML = `${minPrice.currencyCode} ${minPrice.amount} - ${maxPrice.currencyCode} ${maxPrice.amount}`;
+                } else if (minPrice) {
+                    priceElement.innerHTML = `${minPrice.currencyCode} ${minPrice.amount}`;
+                }
+            }
+
+            // Update product images
+            if (product.images && product.images.edges.length > 0) {
+                const images = product.images.edges.map(edge => edge.node);
+                
+                // Update main image
+                const mainImage = document.querySelector('.main-image');
+                if (mainImage && images[0]) {
+                    mainImage.src = images[0].url;
+                    mainImage.alt = images[0].altText || product.title;
+                }
+
+                // Update mobile slider images
+                const sliderTrack = document.querySelector('.slider-track');
+                if (sliderTrack) {
+                    sliderTrack.innerHTML = images.map((image, index) => `
+                        <div class="slide ${index === 0 ? 'active' : ''}">
+                            <img src="${image.url}" alt="${image.altText || product.title}" class="slide-image w-full h-auto max-w-full mx-auto rounded-lg shadow">
+                        </div>
+                    `).join('');
+                }
+
+                // Update thumbnails
+                const thumbnailContainer = document.querySelector('.thumbnail-images');
+                if (thumbnailContainer) {
+                    thumbnailContainer.innerHTML = images.map((image, index) => `
+                        <img src="${image.url}" alt="${image.altText || product.title}" class="thumbnail ${index === 0 ? 'active' : ''}">
+                    `).join('');
+                }
+
+                // Update slider dots
+                const dotsContainer = document.querySelector('.slider-dots');
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = images.map((_, index) => `
+                        <span class="dot ${index === 0 ? 'active' : ''}" data-slide="${index}"></span>
+                    `).join('');
+                }
+            }
+
+            // Update product description
+            const detailsTab = document.getElementById('details');
+            if (detailsTab && product.description) {
+                const descriptionElement = detailsTab.querySelector('p');
+                if (descriptionElement) {
+                    descriptionElement.textContent = product.description;
+                }
+            }
+
+            // Update stock status
+            const stockElement = document.querySelector('.stock-status');
+            if (stockElement && product.variants) {
+                const availableVariants = product.variants.edges.filter(edge => edge.node.availableForSale);
+                if (availableVariants.length > 0) {
+                    stockElement.textContent = 'In Stock';
+                    stockElement.style.color = '#28a745';
+                } else {
+                    stockElement.textContent = 'Out of Stock';
+                    stockElement.style.color = '#dc3545';
+                }
+            }
+
+            // Generate features from product data
+            const featuresList = document.getElementById('dynamic-features');
+            if (featuresList) {
+                const features = [];
+                
+                if (product.productType) {
+                    features.push(`Product Type: ${product.productType}`);
+                }
+                
+                if (product.tags && product.tags.length > 0) {
+                    features.push(`Tags: ${product.tags.join(', ')}`);
+                }
+                
+                if (product.options && product.options.length > 0) {
+                    product.options.forEach(option => {
+                        features.push(`${option.name}: ${option.values.join(', ')}`);
+                    });
+                }
+                
+                if (features.length > 0) {
+                    featuresList.innerHTML = features.map(feature => `<li>${feature}</li>`).join('');
+                } else {
+                    featuresList.innerHTML = '<li>Product details available upon request</li>';
+                }
+            }
+
+            // Generate specifications from product data
+            const specsTable = document.getElementById('dynamic-specs');
+            if (specsTable) {
+                const specs = [];
+                
+                if (product.productType) {
+                    specs.push({ category: 'Product Type', value: product.productType });
+                }
+                
+                if (product.tags && product.tags.length > 0) {
+                    specs.push({ category: 'Tags', value: product.tags.join(', ') });
+                }
+                
+                if (product.variants && product.variants.edges.length > 0) {
+                    const variantCount = product.variants.edges.length;
+                    specs.push({ category: 'Available Variants', value: variantCount.toString() });
+                }
+                
+                if (product.options && product.options.length > 0) {
+                    product.options.forEach(option => {
+                        specs.push({ category: option.name, value: option.values.join(', ') });
+                    });
+                }
+                
+                if (specs.length > 0) {
+                    specsTable.innerHTML = specs.map(spec => `<tr><th>${spec.category}</th><td>${spec.value}</td></tr>`).join('');
+                } else {
+                    specsTable.innerHTML = '<tr><td colspan="2">Specifications available upon request</td></tr>';
+                }
+            }
+        }
+
+        // Fallback to Firebase data loading
+        async function loadFirebaseProductData(productHandle) {
+            try {
+                const featuresDocRef = window.doc(window.db, 'productFeatures', productHandle);
+                const specsDocRef = window.doc(window.db, 'productSpecs', productHandle);
+
+                const featuresDoc = await window.getDoc(featuresDocRef);
+                const specsDoc = await window.getDoc(specsDocRef);
+
+                // Load Key Features
+                const featuresList = document.getElementById('dynamic-features');
+                if (featuresDoc.exists()) {
+                    const features = featuresDoc.data().features || [];
+                    if (features.length > 0) {
+                        featuresList.innerHTML = features.map(feature => `<li>${feature.text || feature}</li>`).join('');
+                    } else {
+                        // Fallback features for premium smartphone
+                        const fallbackFeatures = [
+                            'Advanced AI-powered camera system',
+                            '5G connectivity for ultra-fast internet',
+                            'Long-lasting battery with fast charging',
+                            'Premium build quality with durable materials',
+                            'High-resolution display with HDR support',
+                            'Advanced security features with biometric authentication'
+                        ];
+                        featuresList.innerHTML = fallbackFeatures.map(feature => `<li>${feature}</li>`).join('');
+                    }
+                } else {
+                    // Default features when no Firebase data
+                    const defaultFeatures = [
+                        'High-performance processor for smooth multitasking',
+                        'Professional-grade camera with multiple lenses',
+                        'All-day battery life with fast charging',
+                        'Premium design with premium materials',
+                        'Advanced security with fingerprint and face recognition',
+                        '5G ready for future network compatibility'
+                    ];
+                    featuresList.innerHTML = defaultFeatures.map(feature => `<li>${feature}</li>`).join('');
+                }
+
+                // Load Specifications
+                const specsTable = document.getElementById('dynamic-specs');
+                if (specsDoc.exists()) {
+                    const specifications = specsDoc.data().specifications || [];
+                    if (specifications.length > 0) {
+                        specsTable.innerHTML = specifications.map(spec => `<tr><th>${spec.category}</th><td>${spec.value}</td></tr>`).join('');
+                    } else {
+                        // Fallback specifications
+                        const fallbackSpecs = [
+                            { category: 'Display', value: '6.7-inch OLED, 120Hz refresh rate' },
+                            { category: 'Processor', value: 'Advanced AI chip with neural engine' },
+                            { category: 'Storage', value: '128GB/256GB/512GB options' },
+                            { category: 'RAM', value: '8GB LPDDR5' },
+                            { category: 'Camera', value: 'Triple camera system with 48MP main sensor' },
+                            { category: 'Battery', value: '4500mAh with 65W fast charging' },
+                            { category: 'Connectivity', value: '5G, Wi-Fi 6E, Bluetooth 5.3' },
+                            { category: 'Security', value: 'Fingerprint sensor, Face recognition' }
+                        ];
+                        specsTable.innerHTML = fallbackSpecs.map(spec => `<tr><th>${spec.category}</th><td>${spec.value}</td></tr>`).join('');
+                    }
+                } else {
+                    // Default specifications when no Firebase data
+                    const defaultSpecs = [
+                        { category: 'Display', value: '6.1-inch Super AMOLED, 90Hz' },
+                        { category: 'Processor', value: 'Octa-core with AI acceleration' },
+                        { category: 'Storage', value: '128GB internal, expandable' },
+                        { category: 'RAM', value: '6GB/8GB options' },
+                        { category: 'Camera', value: 'Quad camera setup with 64MP main' },
+                        { category: 'Battery', value: '4000mAh with 25W charging' },
+                        { category: 'Connectivity', value: '4G LTE, Wi-Fi 5, Bluetooth 5.0' },
+                        { category: 'Security', value: 'Side-mounted fingerprint sensor' }
+                    ];
+                    specsTable.innerHTML = defaultSpecs.map(spec => `<tr><th>${spec.category}</th><td>${spec.value}</td></tr>`).join('');
+                }
+            } catch (error) {
+                // Handle Firebase errors gracefully with default data
+                const featuresList = document.getElementById('dynamic-features');
+                const specsTable = document.getElementById('dynamic-specs');
+                
+                // Default features
+                const defaultFeatures = [
+                    'High-performance processor for smooth multitasking',
+                    'Professional-grade camera with multiple lenses',
+                    'All-day battery life with fast charging',
+                    'Premium design with premium materials',
+                    'Advanced security with fingerprint and face recognition',
+                    '5G ready for future network compatibility'
+                ];
+                featuresList.innerHTML = defaultFeatures.map(feature => `<li>${feature}</li>`).join('');
+                
+                // Default specifications
+                const defaultSpecs = [
+                    { category: 'Display', value: '6.1-inch Super AMOLED, 90Hz' },
+                    { category: 'Processor', value: 'Octa-core with AI acceleration' },
+                    { category: 'Storage', value: '128GB internal, expandable' },
+                    { category: 'RAM', value: '6GB/8GB options' },
+                    { category: 'Camera', value: 'Quad camera setup with 64MP main' },
+                    { category: 'Battery', value: '4000mAh with 25W charging' },
+                    { category: 'Connectivity', value: '4G LTE, Wi-Fi 5, Bluetooth 5.0' },
+                    { category: 'Security', value: 'Side-mounted fingerprint sensor' }
+                ];
+                specsTable.innerHTML = defaultSpecs.map(spec => `<tr><th>${spec.category}</th><td>${spec.value}</td></tr>`).join('');
+            }
+        }
+
+        // Sample product data for when Shopify product is not found
+        function loadSampleProductData(handle) {
+            
+            const sampleProducts = {
+                'test': {
+                    title: "iPhone 15 Pro Max - Test Product",
+                    description: "Experience the future of mobile technology with the iPhone 15 Pro Max. Featuring the revolutionary A17 Pro chip, titanium design, and an advanced camera system that captures stunning photos and videos in any lighting condition.",
+                    price: "1199.00",
+                    currency: "USD",
+                    images: [
+                        "https://placehold.co/600x600?text=iPhone+15+Pro+Max+1",
+                        "https://placehold.co/600x600?text=iPhone+15+Pro+Max+2",
+                        "https://placehold.co/600x600?text=iPhone+15+Pro+Max+3",
+                        "https://placehold.co/600x600?text=iPhone+15+Pro+Max+4"
+                    ],
+                    available: true,
+                    features: [
+                        "A17 Pro chip with 6-core GPU",
+                        "Titanium design with Ceramic Shield",
+                        "48MP Main camera with 2x Telephoto",
+                        "5x Telephoto camera with 120mm focal length",
+                        "Action button for quick access",
+                        "USB-C connector",
+                        "Up to 29 hours video playback"
+                    ],
+                    specs: [
+                        { category: "Display", value: "6.7-inch Super Retina XDR display" },
+                        { category: "Chip", value: "A17 Pro chip with 6-core GPU" },
+                        { category: "Storage", value: "256GB, 512GB, 1TB" },
+                        { category: "Camera", value: "48MP Main + 12MP Ultra Wide + 5x Telephoto" },
+                        { category: "Battery", value: "Up to 29 hours video playback" },
+                        { category: "Connectivity", value: "5G, Wi-Fi 6E, Bluetooth 5.3" }
+                    ]
+                },
+                'default-product': {
+                    title: "Premium Smartphone X1",
+                    description: "Experience cutting-edge technology with our latest Premium Smartphone X1 that combines elegant design with powerful performance. This device features a premium build quality with an immersive display, advanced camera system for stunning photos, and all-day battery life to keep you connected.",
+                    price: "899.99",
+                    currency: "USD",
+                    images: [
+                        "https://placehold.co/600x600?text=Premium+Smartphone+X1+1",
+                        "https://placehold.co/600x600?text=Premium+Smartphone+X1+2",
+                        "https://placehold.co/600x600?text=Premium+Smartphone+X1+3",
+                        "https://placehold.co/600x600?text=Premium+Smartphone+X1+4"
+                    ],
+                    available: true,
+                    features: [
+                        "6.7-inch OLED display with 120Hz refresh rate",
+                        "Latest Snapdragon processor",
+                        "Triple camera system with 108MP main sensor",
+                        "5000mAh battery with 65W fast charging",
+                        "5G connectivity",
+                        "In-display fingerprint sensor",
+                        "Wireless charging support"
+                    ],
+                    specs: [
+                        { category: "Display", value: "6.7-inch OLED, 120Hz" },
+                        { category: "Processor", value: "Snapdragon 8 Gen 2" },
+                        { category: "RAM", value: "8GB/12GB LPDDR5X" },
+                        { category: "Storage", value: "128GB/256GB/512GB UFS 4.0" },
+                        { category: "Camera", value: "108MP + 12MP + 10MP" },
+                        { category: "Battery", value: "5000mAh, 65W charging" }
+                    ]
+                }
+            };
+            
+            const product = sampleProducts[handle] || sampleProducts['default-product'];
+            updateProductDisplayWithSampleData(product);
+        }
+
+        // Update product display with sample data
+        function updateProductDisplayWithSampleData(product) {
+            console.log('🎨 Updating display with sample product:', product.title);
+            
+            // Update product title
+            const titleElement = document.querySelector('.product-title');
+            if (titleElement) {
+                titleElement.textContent = product.title;
+            }
+
+            // Update product price
+            const priceElement = document.querySelector('.price');
+            if (priceElement) {
+                priceElement.innerHTML = `${product.currency} ${product.price}`;
+            }
+
+            // Update product images
+            if (product.images && product.images.length > 0) {
+                // Update main image
+                const mainImage = document.querySelector('.main-image');
+                if (mainImage) {
+                    mainImage.src = product.images[0];
+                    mainImage.alt = product.title;
+                }
+
+                // Update mobile slider images
+                const sliderTrack = document.querySelector('.slider-track');
+                if (sliderTrack) {
+                    sliderTrack.innerHTML = product.images.map((image, index) => `
+                        <div class="slide ${index === 0 ? 'active' : ''}">
+                            <img src="${image}" alt="${product.title}" class="slide-image w-full h-auto max-w-full mx-auto rounded-lg shadow">
+                        </div>
+                    `).join('');
+                }
+
+                // Update thumbnails
+                const thumbnailContainer = document.querySelector('.thumbnail-images');
+                if (thumbnailContainer) {
+                    thumbnailContainer.innerHTML = product.images.map((image, index) => `
+                        <img src="${image}" alt="${product.title}" class="thumbnail ${index === 0 ? 'active' : ''}">
+                    `).join('');
+                }
+
+                // Update slider dots
+                const dotsContainer = document.querySelector('.slider-dots');
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = product.images.map((_, index) => `
+                        <span class="dot ${index === 0 ? 'active' : ''}" data-slide="${index}"></span>
+                    `).join('');
+                }
+            }
+
+            // Update product description
+            const detailsTab = document.getElementById('details');
+            if (detailsTab && product.description) {
+                const descriptionElement = detailsTab.querySelector('p');
+                if (descriptionElement) {
+                    descriptionElement.textContent = product.description;
+                }
+            }
+
+            // Update stock status
+            const stockElement = document.querySelector('.stock-status');
+            if (stockElement) {
+                if (product.available) {
+                    stockElement.textContent = 'In Stock';
+                    stockElement.style.color = '#28a745';
+                } else {
+                    stockElement.textContent = 'Out of Stock';
+                    stockElement.style.color = '#dc3545';
+                }
+            }
+
+            // Update features
+            const featuresList = document.getElementById('dynamic-features');
+            if (featuresList && product.features) {
+                featuresList.innerHTML = product.features.map(feature => `<li>${feature}</li>`).join('');
+            }
+
+            // Update specifications
+            const specsTable = document.getElementById('dynamic-specs');
+            if (specsTable && product.specs) {
+                specsTable.innerHTML = product.specs.map(spec => `<tr><th>${spec.category}</th><td>${spec.value}</td></tr>`).join('');
+            }
+        }
+
+        // Fallback function to load sample products when Shopify fails
+        function loadSampleProducts() {
+            console.log('📦 Loading sample products as fallback...');
+            
+            const sampleProducts = [
+                {
+                    title: "iPhone 15 Pro Max",
+                    handle: "iphone-15-pro-max",
+                    description: "The most advanced iPhone ever with A17 Pro chip, titanium design, and pro camera system.",
+                    price: "1199.00",
+                    currency: "USD",
+                    image: "https://placehold.co/400x400?text=iPhone+15+Pro+Max",
+                    available: true
+                },
+                {
+                    title: "Samsung Galaxy S24 Ultra",
+                    handle: "samsung-galaxy-s24-ultra",
+                    description: "Revolutionary AI features with S Pen, 200MP camera, and titanium frame.",
+                    price: "1299.99",
+                    currency: "USD",
+                    image: "https://placehold.co/400x400?text=Galaxy+S24+Ultra",
+                    available: true
+                },
+                {
+                    title: "Google Pixel 8 Pro",
+                    handle: "google-pixel-8-pro",
+                    description: "Best-in-class camera with AI-powered features and Google's latest innovations.",
+                    price: "999.00",
+                    currency: "USD",
+                    image: "https://placehold.co/400x400?text=Pixel+8+Pro",
+                    available: true
+                },
+                {
+                    title: "OnePlus 12",
+                    handle: "oneplus-12",
+                    description: "Fast and smooth performance with Hasselblad camera and 100W charging.",
+                    price: "799.99",
+                    currency: "USD",
+                    image: "https://placehold.co/400x400?text=OnePlus+12",
+                    available: false
+                }
+            ];
+            
+            displayRelatedProducts(sampleProducts);
+        }
+
+        // Load related products from Shopify
+        async function loadRelatedProducts(currentProductHandle) {
+            try {
+                console.log('📦 Loading related products from Shopify...');
+                
+                const query = `
+                    query getProducts($first: Int!) {
+                        products(first: $first) {
+                            edges {
+                                node {
+                                    id
+                                    title
+                                    handle
+                                    description
+                                    productType
+                                    priceRange {
+                                        minVariantPrice {
+                                            amount
+                                            currencyCode
+                                        }
+                                    }
+                                    images(first: 1) {
+                                        edges {
+                                            node {
+                                                url
+                                                altText
+                                            }
+                                        }
+                                    }
+                                    variants(first: 1) {
+                                        edges {
+                                            node {
+                                                availableForSale
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `;
+
+                const response = await fetch(shopifyEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Shopify-Storefront-Access-Token': shopifyAccessToken
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: { first: 8 }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.errors) {
+                    console.error('Shopify API errors:', data.errors);
+                    // Load sample products as fallback
+                    loadSampleProducts();
+                    return;
+                }
+
+                if (data.data && data.data.products) {
+                    const products = data.data.products.edges
+                        .map(edge => edge.node)
+                        .filter(product => product.handle !== currentProductHandle) // Exclude current product
+                        .slice(0, 4); // Show max 4 related products
+                    
+                    displayRelatedProducts(products);
+                } else {
+                    // Load sample products as fallback
+                    loadSampleProducts();
+                }
+            } catch (error) {
+                console.error('❌ Error loading related products:', error);
+                // Load sample products as fallback
+                loadSampleProducts();
+            }
+        }
+
+        // Display related products
+        function displayRelatedProducts(products) {
+            const relatedGrid = document.getElementById('related-products-grid');
+            if (!relatedGrid) return;
+
+            if (products.length === 0) {
+                relatedGrid.innerHTML = `
+                    <div class="col-span-full text-center py-8">
+                        <div class="text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-box-open text-4xl mb-4"></i>
+                            <p class="text-lg">No related products found</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            relatedGrid.innerHTML = products.map(product => {
+                // Handle both Shopify and sample products
+                let price, currency, image, isAvailable, description;
+                
+                if (product.priceRange) {
+                    // Shopify product format
+                    price = product.priceRange?.minVariantPrice?.amount || '0';
+                    currency = product.priceRange?.minVariantPrice?.currencyCode || 'USD';
+                    image = product.images?.edges[0]?.node || { url: 'https://placehold.co/300x200', altText: product.title };
+                    isAvailable = product.variants?.edges[0]?.node?.availableForSale || false;
+                    description = product.description;
+                } else {
+                    // Sample product format
+                    price = product.price;
+                    currency = product.currency;
+                    image = { url: product.image, altText: product.title };
+                    isAvailable = product.available;
+                    description = product.description;
+                }
+                
+                return `
+                    <div class="product-card">
+                        <img src="${image.url}" alt="${image.altText || product.title}" 
+                             class="w-full h-48 object-cover"
+                             onerror="this.src='https://placehold.co/300x200?text=No+Image'">
+                        <div class="product-card-content">
+                            <h3>${product.title}</h3>
+                            <div class="price">${currency} ${price}</div>
+                            <div class="rating">★★★★☆ 4.5</div>
+                            <p>${description ? description.substring(0, 100) + '...' : 'Product description available upon request'}</p>
+                            <div class="actions">
+                                <button class="btn-primary" onclick="viewProduct('${product.handle}')">
+                                    ${isAvailable ? 'View Details' : 'Contact Us'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Show error for related products
+        function showRelatedProductsError() {
+            const relatedGrid = document.getElementById('related-products-grid');
+            if (!relatedGrid) return;
+
+            relatedGrid.innerHTML = `
+                <div class="col-span-full text-center py-8">
+                    <div class="text-red-500 dark:text-red-400">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                        <p class="text-lg">Failed to load related products</p>
+                        <button onclick="loadRelatedProducts()" class="mt-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                            Try Again
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // View product function
+        function viewProduct(handle) {
+            window.location.href = `product-in.html?product=${handle}`;
+        }
+
+        // Function to load and display Shopify products
+        async function loadShopifyProducts() {
+            const products = await loadAllShopifyProducts();
+            
+            if (products.length > 0) {
+                // Display first product as main product
+                const firstProduct = products[0];
+                updateProductDisplay(firstProduct);
+                
+                // Display remaining products as related products
+                const relatedProducts = products.slice(1, 5); // Show up to 4 related products
+                displayRelatedProducts(relatedProducts);
+                
+                // Show success message
+                const statusDiv = document.getElementById('shopify-status');
+                if (statusDiv) {
+                    statusDiv.style.display = 'block';
+                    const statusIcon = document.getElementById('status-icon');
+                    const statusText = document.getElementById('status-text');
+                    if (statusIcon && statusText) {
+                        statusIcon.textContent = '✅';
+                        statusText.textContent = `Loaded ${products.length} products from Shopify`;
+                    }
+                }
+            } else {
+                // Show error message
+                const statusDiv = document.getElementById('shopify-status');
+                if (statusDiv) {
+                    statusDiv.style.display = 'block';
+                    const statusIcon = document.getElementById('status-icon');
+                    const statusText = document.getElementById('status-text');
+                    if (statusIcon && statusText) {
+                        statusIcon.textContent = '❌';
+                        statusText.textContent = 'No products found in Shopify store';
+                    }
+                }
+            }
+        }
+
+        // Algerian provinces and districts data
+        
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollButton = document.getElementById('scroll-to-top');
+            if (scrollButton) {
+                if (window.pageYOffset > 300) {
+                    scrollButton.classList.add('show');
+                } else {
+                    scrollButton.classList.remove('show');
+                }
+            }
+        });
+        
+        // Add smooth scrolling to all internal links
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
     </script>
+    <script src="lang.js" defer></script>
 </body>
 </html>

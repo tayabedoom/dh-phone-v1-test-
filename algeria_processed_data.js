@@ -1,0 +1,355 @@
+// Complete Algeria Wilayas and Dairas data from official source
+// Source: https://github.com/othmanus/algeria-cities
+
+const algeriaData = [
+    {
+        "wilaya_name": "Adrar",
+        "wilaya_name_ar": "أدرار",
+        "daira_names": ["Adrar", "Aoulef", "Fenoughil", "Reggane", "Tsabit", "Zaouiat Kounta"],
+        "daira_names_ar": ["أدرار", "أولف", "تسابيت", "رقان", "زاوية كنتة", "فنوغيل"]
+    },
+    {
+        "wilaya_name": "Aïn Defla",
+        "wilaya_name_ar": "عين الدفلة",
+        "daira_names": ["Ain Defla", "Ain Lechiakh", "Bathia", "Bordj El Emir Khaled", "Boumedfaa", "Djelida", "Djendel", "El Abadia", "El Amra", "El Attaf", "Hammam Righa", "Khemis", "Miliana", "Rouina"],
+        "daira_names_ar": ["الروينة", "العامرة", "العبادية", "العطاف", "برج الأمير خالد", "بطحية", "بومدفع", "جليدة", "جندل", "حمام ريغة", "خميس", "عين الاشياخ", "عين الدفلى", "مليانة"]
+    },
+    {
+        "wilaya_name": "Aïn Témouchent",
+        "wilaya_name_ar": "عين تيموشنت",
+        "daira_names": ["Ain Kihel", "Ain Larbaa", "Ain Temouchent", "Beni Saf", "El Amria", "El Maleh", "Hammam Bou Hadjar", "Oulhassa Gheraba"],
+        "daira_names_ar": ["العامرية", "المالح", "بني صاف", "حمام بوحجر", "عين الأربعاء", "عين الكيحل", "عين تموشنت", "ولهاصة الغرابة"]
+    },
+    {
+        "wilaya_name": "Alger",
+        "wilaya_name_ar": "الجزائر",
+        "daira_names": ["Bab El Oued", "Baraki", "Bir Mourad Rais", "Birtouta", "Bouzareah", "Cheraga", "Dar El Beida", "Draria", "El Harrach", "Hussein Dey", "Rouiba", "Sidi M'hamed", "Zeralda"],
+        "daira_names_ar": ["الحراش", "الدار البيضاء", "الدرارية", "الرويبة", "الشراقة", "بئر توتة", "بئر مراد رايس", "باب الوادي", "براقي", "بوزريعة", "حسين داي", "زرالدة", "سيدي امحمد"]
+    },
+    {
+        "wilaya_name": "Annaba",
+        "wilaya_name_ar": "عنابة",
+        "daira_names": ["Ain El Berda", "Annaba", "Berrahal", "Chetaibi", "El Bouni", "El Hadjar"],
+        "daira_names_ar": ["البوني", "الحجار", "برحال", "شطايبي", "عنابة", "عين الباردة"]
+    },
+    {
+        "wilaya_name": "Batna",
+        "wilaya_name_ar": "باتنة",
+        "daira_names": ["Ain Djasser", "Ain Touta", "Arris", "Barika", "Batna", "Bouzina", "Chemora", "Djezzar", "El Madher", "Ichemoul", "Menaa", "Merouana", "N'gaous", "Ouled Si Slimane", "Ras El Aioun", "Seggana", "Seriana", "Tazoult", "Theniet El Abed", "Timgad", "Tkout"],
+        "daira_names_ar": ["أريس", "أولاد سي سليمان", "إشمول", "الجزار", "الشمرة", "المعذر", "باتنة", "بريكة", "بوزينة", "تازولت", "تكوت", "تيمقاد", "ثنية العابد", "رأس العيون", "سريانة", "سقانة", "عين التوتة", "عين جاسر", "مروانة", "منعة", "نقاوس"]
+    },
+    {
+        "wilaya_name": "Béchar",
+        "wilaya_name_ar": "بشار",
+        "daira_names": ["Abadla", "Bechar", "Beni Ounif", "Kenadsa", "Lahmar", "Tabelbala", "Taghit"],
+        "daira_names_ar": ["العبادلة", "القنادسة", "بشار", "بني ونيف", "تاغيت", "تبلبالة", "لحمر"]
+    },
+    {
+        "wilaya_name": "Béjaïa",
+        "wilaya_name_ar": " بجاية",
+        "daira_names": ["Adekar", "Akbou", "Amizour", "Aokas", "Barbacha", "Bejaia", "Beni Maouche", "Chemini", "Darguina", "El Kseur", "Ifri Ouzellaguene", "Ighil Ali", "Kherrata", "Seddouk", "Sidi Aich", "Souk El Tenine", "Tazmalt", "Tichy", "Timezrit"],
+        "daira_names_ar": ["أدكار", "أقبو", "أميزور", "أوقاس", "إغيل علي", "إفري أوزلاقن", "القصر", "بجاية", "برباشة", "بني معوش", "تازملت", "تيشي", "تيمزريت", "خراطة", "درقينة", "سوق الإثنين", "سيدي عيش", "شميني", "صدوق"]
+    },
+    {
+        "wilaya_name": "Béni Abbès",
+        "wilaya_name_ar": "بني عباس",
+        "daira_names": ["Beni Abbes", "El Ouata", "Igli", "Kerzaz", "Ouled Khodeir"],
+        "daira_names_ar": ["أولاد خضير", "إقلي", "الواتة", "بني عباس", "كرزاز"]
+    },
+    {
+        "wilaya_name": "Biskra",
+        "wilaya_name_ar": "بسكرة",
+        "daira_names": ["Biskra", "Djemorah", "El Kantara", "El Outaya", "Foughala", "Mechouneche", "Ourlal", "Sidi Okba", "Tolga", "Zeribet El Oued"],
+        "daira_names_ar": ["أورلال", "القنطرة", "الوطاية", "بسكرة", "جمورة", "زريبة الوادي", "سيدي عقبة", "طولقة", "فوغالة", "مشونش"]
+    },
+    {
+        "wilaya_name": "Blida",
+        "wilaya_name_ar": "البليدة",
+        "daira_names": ["Blida", "Boufarik", "Bougara", "Bouinan", "El Affroun", "Larbaa", "Meftah", "Mouzaia", "Oued El Alleug", "Ouled Yaich"],
+        "daira_names_ar": ["أولاد يعيش", "الأربعاء", "البليدة", "العفرون", "بوعينان", "بوفاريك", "بوقرة", "مفتاح", "موزاية", "وادي العلايق"]
+    },
+    {
+        "wilaya_name": "Bordj Badji Mokhtar",
+        "wilaya_name_ar": "برج باجي مختار",
+        "daira_names": ["Bordj Badji Mokhtar"],
+        "daira_names_ar": ["برج باجي مختار"]
+    },
+    {
+        "wilaya_name": "Bordj Bou Arreridj",
+        "wilaya_name_ar": "برج بوعريريج",
+        "daira_names": ["Ain Taghrout", "Bir Kasdali", "Bordj Bou Arreridj", "Bordj Ghedir", "Bordj Zemmoura", "Djaafra", "El Hamadia", "Mansourah", "Medjana", "Ras El Oued"],
+        "daira_names_ar": ["الحمادية", "المنصورة", "بئر قاصد علي", "برج الغدير", "برج بوعريريج", "برج زمورة", "جعافرة", "رأس الوادي", "عين تاغروت", "مجانة"]
+    },
+    {
+        "wilaya_name": "Bouira",
+        "wilaya_name_ar": "البويرة",
+        "daira_names": ["Ain Bessem", "Bechloul", "Bir Ghbalou", "Bordj Okhriss", "Bouira", "El Hachimia", "Haizer", "Kadiria", "Lakhdaria", "M'chedallah", "Souk El Khemis", "Sour El Ghozlane"],
+        "daira_names_ar": ["الأخضرية", "البويرة", "الحيزر", "القادرية", "الهاشمية", "بئر غبالو", "برج أوخريص", "بشلول", "سور الغزلان", "سوق الخميس", "عين بسام", "مشد الله"]
+    },
+    {
+        "wilaya_name": "Boumerdès",
+        "wilaya_name_ar": "بومرداس",
+        "daira_names": ["Baghlia", "Bordj Menaiel", "Boudouaou", "Boumerdes", "Dellys", "Isser", "Khemis El Khechna", "Naciria", "Thenia"],
+        "daira_names_ar": ["الثنية", "الناصرية", "برج منايل", "بغلية", "بودواو", "بومرداس", "خميس الخشنة", "دلس", "يسر"]
+    },
+    {
+        "wilaya_name": "Chlef",
+        "wilaya_name_ar": " الشلف",
+        "daira_names": ["Abou El Hassane", "Ain Merane", "Beni Haoua", "Boukadir", "Chlef", "El Karimia", "El Marsa", "Oued Fodda", "Ouled Ben Abdelkader", "Ouled Fares", "Taougrit", "Tenes", "Zeboudja"],
+        "daira_names_ar": ["أبو الحسن", "أولاد بن عبد القادر", "أولاد فارس", "الزبوجة", "الشلف", "الكريمية", "المرسى", "بني حواء", "بوقادير", "تاوقريت", "تنس", "عين مران", "وادي الفضة"]
+    },
+    {
+        "wilaya_name": "Constantine",
+        "wilaya_name_ar": "قسنطينة",
+        "daira_names": ["Ain Abid", "Constantine", "El Khroub", "Hamma Bouziane", "Ibn Ziad", "Zighoud Youcef"],
+        "daira_names_ar": ["ابن زياد", "الخروب", "حامة بوزيان", "زيغود يوسف", "عين عبيد", "قسنطينة"]
+    },
+    {
+        "wilaya_name": "Djanet",
+        "wilaya_name_ar": "جانت",
+        "daira_names": ["Djanet"],
+        "daira_names_ar": ["جانت"]
+    },
+    {
+        "wilaya_name": "Djelfa",
+        "wilaya_name_ar": "الجلفة",
+        "daira_names": ["Ain El Ibel", "Ain Oussera", "Birine", "Charef", "Dar Chioukh", "Djelfa", "El Idrissia", "Faidh El Botma", "Had Sahary", "Hassi Bahbah", "Messaad", "Sidi Laadjel"],
+        "daira_names_ar": ["الادريسية", "الجلفة", "الشارف", "بيرين", "حاسي بحبح", "حد الصحاري", "دار الشيوخ", "سيدي لعجال", "عين الإبل", "عين وسارة", "فيض البطمة", "مسعد"]
+    },
+    {
+        "wilaya_name": "El Bayadh",
+        "wilaya_name_ar": "البيض",
+        "daira_names": ["Boualem", "Bougtoub", "Boussemghoun", "Brezina", "Chellala", "El Bayadh", "Labiodh Sidi Cheikh", "Rogassa"],
+        "daira_names_ar": ["الأبيض سيدي الشيخ", "البيض", "بريزينة", "بوسمغون", "بوعلام", "بوقطب", "رقاصة", "شلالة"]
+    },
+    {
+        "wilaya_name": "El Meghaier",
+        "wilaya_name_ar": "المغير",
+        "daira_names": ["Djamaa", "El Meghaier"],
+        "daira_names_ar": ["المغير", "جامعة"]
+    },
+    {
+        "wilaya_name": "El Menia",
+        "wilaya_name_ar": "المنيعة",
+        "daira_names": ["El Menia", "Mansourah"],
+        "daira_names_ar": ["المنصورة", "المنيعة"]
+    },
+    {
+        "wilaya_name": "El Oued",
+        "wilaya_name_ar": "الوادي",
+        "daira_names": ["Bayadha", "Debila", "El Oued", "Guemar", "Hassi Khalifa", "Magrane", "Mih Ouensa", "Reguiba", "Robbah", "Taleb Larbi"],
+        "daira_names_ar": ["البياضة", "الدبيلة", "الرباح", "الرقيبة", "الطالب العربي", "المقرن", "الوادي", "اميه وانسة", "حاسي خليفة", "قمار"]
+    },
+    {
+        "wilaya_name": "El Tarf",
+        "wilaya_name_ar": "الطارف",
+        "daira_names": ["Ben M'hidi", "Besbes", "Bouhadjar", "Bouteldja", "Drean", "El Kala", "El Tarf"],
+        "daira_names_ar": ["البسباس", "الذرعان", "الطارف", "القالة", "بن مهيدي", "بوثلجة", "بوحجار"]
+    },
+    {
+        "wilaya_name": "Ghardaïa",
+        "wilaya_name_ar": "غرداية",
+        "daira_names": ["Berriane", "Bounoura", "Dhayet Ben Dhahoua", "El Guerrara", "Ghardaia", "Mansourah", "Metlili", "Zelfana"],
+        "daira_names_ar": ["القرارة", "المنصورة", "بريان", "بونورة", "زلفانة", "ضاية بن ضحوة", "غرداية", "متليلي"]
+    },
+    {
+        "wilaya_name": "Guelma",
+        "wilaya_name_ar": "قالمة",
+        "daira_names": ["Ain Hessainia", "Ain Makhlouf", "Bouchegouf", "Guelaat Bousbaa", "Guelma", "Hammam Debagh", "Hammam N'bails", "Heliopolis", "Khezaras", "Oued Zenati"],
+        "daira_names_ar": ["بوشقوف", "حمام النبايل", "حمام دباغ", "خزارة", "عين حساينية", "عين مخلوف", "قالمة", "قلعة بوصبع", "هيليوبوليس", "وادي الزناتي"]
+    },
+    {
+        "wilaya_name": "Illizi",
+        "wilaya_name_ar": "إليزي",
+        "daira_names": ["Illizi", "In Amenas"],
+        "daira_names_ar": ["إن أمناس", "إيليزي"]
+    },
+    {
+        "wilaya_name": "In Guezzam",
+        "wilaya_name_ar": "عين قزام",
+        "daira_names": ["In Guezzam", "Tin Zouatine"],
+        "daira_names_ar": ["تين زواتين", "عين قزام"]
+    },
+    {
+        "wilaya_name": "In Salah",
+        "wilaya_name_ar": "عين صالح",
+        "daira_names": ["In Ghar", "In Salah"],
+        "daira_names_ar": ["إينغر", "عين صالح"]
+    },
+    {
+        "wilaya_name": "Jijel",
+        "wilaya_name_ar": "جيجل",
+        "daira_names": ["Chekfa", "Djimla", "El Ancer", "El Aouana", "El Milia", "Jijel", "Settara", "Sidi Marouf", "Taher", "Texenna", "Ziamah Mansouriah"],
+        "daira_names_ar": ["السطارة", "الشقفة", "الطاهير", "العنصر", "العوانة", "الميلية", "تاكسنة", "جيجل", "جيملة", "زيامة منصورية", "سيدي معروف"]
+    },
+    {
+        "wilaya_name": "Khenchela",
+        "wilaya_name_ar": "خنشلة",
+        "daira_names": ["Ain Touila", "Babar", "Bouhmama", "Chechar", "El Hamma", "Kais", "Khenchela", "Ouled Rechache"],
+        "daira_names_ar": ["أولاد رشاش", "الحامة", "بابار", "بوحمامة", "خنشلة", "ششار", "عين الطويلة", "قايس"]
+    },
+    {
+        "wilaya_name": "Laghouat",
+        "wilaya_name_ar": "الأغواط",
+        "daira_names": ["Aflou", "Ain Madhi", "Brida", "El Ghicha", "Gueltat Sidi Saad", "Hassi R'mel", "Ksar El Hirane", "Laghouat", "Oued Morra", "Sidi Makhlouf"],
+        "daira_names_ar": ["أفلو", "الأغواط", "الغيشة", "بريدة", "حاسي الرمل", "سيدي مخلوف", "عين ماضي", "قتلة سيدي سعيد", "قصر الحيران", "وادي مرة"]
+    },
+    {
+        "wilaya_name": "M'Sila",
+        "wilaya_name_ar": "المسيلة",
+        "daira_names": ["Ain El Hadjel", "Ain El Melh", "Ben Srour", "Bousaada", "Chellal", "Djebel Messaad", "Hammam Dalaa", "Khoubana", "M'sila", "Magra", "Medjedel", "Ouled Derradj", "Ouled Sidi Brahim", "Sidi Aissa", "Sidi Ameur"],
+        "daira_names_ar": ["أولاد دراج", "أولاد سيدي ابراهيم", "المسيلة", "امجدل", "بن سرور", "بوسعادة", "جبل مساعد", "حمام الضلعة", "خبانة", "سيدي عامر", "سيدي عيسى", "شلال", "عين الحجل", "عين الملح", "مقرة"]
+    },
+    {
+        "wilaya_name": "Mascara",
+        "wilaya_name_ar": "معسكر",
+        "daira_names": ["Ain Fares", "Ain Fekan", "Aouf", "Bouhanifia", "El Bordj", "Ghriss", "Hachem", "Mascara", "Mohammadia", "Oggaz", "Oued El Abtal", "Oued Taria", "Sig", "Tighennif", "Tizi", "Zahana"],
+        "daira_names_ar": ["البرج", "الحشم", "المحمدية", "بوحنيفية", "تيزي", "تيغنيف", "زهانة", "سيق", "عقاز", "عوف", "عين فارس", "عين فكان", "غريس", "معسكر", "وادي الأبطال", "وادي التاغية"]
+    },
+    {
+        "wilaya_name": "Médéa",
+        "wilaya_name_ar": "المدية",
+        "daira_names": ["Ain Boucif", "Aziz", "Beni Slimane", "Berrouaghia", "Chahbounia", "Chellalat El Adhaoura", "El Azizia", "El Omaria", "Guelb El Kebir", "Ksar El Boukhari", "Medea", "Ouamri", "Ouled Antar", "Ouzera", "Seghouane", "Si Mahdjoub", "Sidi Naamane", "Souaghi", "Tablat"],
+        "daira_names_ar": ["أولاد عنتر", "البرواقية", "السواقي", "الشهبونية", "العزيزية", "العمارية", "القلب الكبير", "المدية", "بني سليمان", "تابلاط", "سغوان", "سي المحجوب", "سيدي نعمان", "شلالة العذاورة", "عزيز", "عوامري", "عين بوسيف", "قصر البخاري", "وزرة"]
+    },
+    {
+        "wilaya_name": "Mila",
+        "wilaya_name_ar": "ميلة",
+        "daira_names": ["Ain Beida Harriche", "Bouhatem", "Chelghoum Laid", "Ferdjioua", "Grarem Gouga", "Mila", "Oued Endja", "Rouached", "Sidi Merouane", "Tadjenanet", "Tassadane Haddada", "Teleghma", "Terrai Bainen"],
+        "daira_names_ar": ["التلاغمة", "الرواشد", "القرارم قوقة", "بوحاتم", "تاجنانت", "ترعي باينان", "تسدان حدادة", "سيدي مروان", "شلغوم العيد", "عين البيضاء أحريش", "فرجيوة", "ميلة", "وادي النجاء"]
+    },
+    {
+        "wilaya_name": "Mostaganem",
+        "wilaya_name_ar": "مستغانم",
+        "daira_names": ["Achaacha", "Ain Nouicy", "Ain Tedeles", "Bouguirat", "Hassi Mameche", "Kheir Eddine", "Mesra", "Mostaganem", "Sidi Ali", "Sidi Lakhdar"],
+        "daira_names_ar": ["بوقيراط", "حاسي ماماش", "خير الدين", "سيدي علي", "سيدي لخضر", "عشعاشة", "عين تادلس", "عين نويسي", "ماسرة", "مستغانم"]
+    },
+    {
+        "wilaya_name": "Naâma",
+        "wilaya_name_ar": "النعامة",
+        "daira_names": ["Ain Sefra", "Asla", "Mecheria", "Mekmen Ben Amar", "Moghrar", "Naama", "Sfissifa"],
+        "daira_names_ar": ["المشرية", "النعامة", "سفيسيفة", "عسلة", "عين الصفراء", "مغرار", "مكمن بن عمار"]
+    },
+    {
+        "wilaya_name": "Oran",
+        "wilaya_name_ar": "وهران",
+        "daira_names": ["Ain Turk", "Arzew", "Bethioua", "Bir El Djir", "Boutlelis", "Es Senia", "Gdyel", "Oran", "Oued Tlelat"],
+        "daira_names_ar": ["أرزيو", "السانية", "بئر الجير", "بطيوة", "بوتليليس", "عين الترك", "قديل", "وادي تليلات", "وهران"]
+    },
+    {
+        "wilaya_name": "Ouargla",
+        "wilaya_name_ar": "ورقلة",
+        "daira_names": ["El Borma", "Hassi Messaoud", "N'goussa", "Ouargla", "Sidi Khouiled"],
+        "daira_names_ar": ["البرمة", "انقوسة", "حاسي مسعود", "سيدي خويلد", "ورقلة"]
+    },
+    {
+        "wilaya_name": "Ouled Djellal",
+        "wilaya_name_ar": "أولاد جلال",
+        "daira_names": ["Ouled Djellal", "Sidi Khaled"],
+        "daira_names_ar": ["أولاد جلال", "سيدي  خالد"]
+    },
+    {
+        "wilaya_name": "Oum El Bouaghi",
+        "wilaya_name_ar": "أم البواقي",
+        "daira_names": ["Ain Babouche", "Ain Beida", "Ain Fekroun", "Ain Kercha", "Ain M'lila", "Dhalaa", "F'kirina", "Ksar Sbahi", "Meskiana", "Oum El Bouaghi", "Sigus", "Souk Naamane"],
+        "daira_names_ar": ["أم البواقي", "الضلعة", "سوق نعمان", "سيقوس", "عين البيضاء", "عين ببوش", "عين فكرون", "عين كرشة", "عين مليلة", "فكيرينة", "قصر الصباحي", "مسكيانة"]
+    },
+    {
+        "wilaya_name": "Relizane",
+        "wilaya_name_ar": "غليزان",
+        "daira_names": ["Ain Tarek", "Ammi Moussa", "Djidiouia", "El H'madna", "El Matmar", "Mazouna", "Mendes", "Oued Rhiou", "Ramka", "Relizane", "Sidi M'hamed Ben Ali", "Yellel", "Zemmoura"],
+        "daira_names_ar": ["الحمادنة", "الرمكة", "المطمر", "جديوية", "زمورة", "سيدي أمحمد بن علي", "عمي موسى", "عين طارق", "غليزان", "مازونة", "منداس", "وادي رهيو", "يلل"]
+    },
+    {
+        "wilaya_name": "Saïda",
+        "wilaya_name_ar": "سعيدة",
+        "daira_names": ["Ain El Hadjar", "El Hassasna", "Ouled Brahim", "Saida", "Sidi Boubekeur", "Youb"],
+        "daira_names_ar": ["أولاد ابراهيم", "الحساسنة", "سعيدة", "سيدي بوبكر", "عين الحجر", "يوب"]
+    },
+    {
+        "wilaya_name": "Sétif",
+        "wilaya_name_ar": "سطيف",
+        "daira_names": ["Ain Arnat", "Ain Azel", "Ain El Kebira", "Ain Oulmene", "Amoucha", "Babor", "Beni Aziz", "Beni Ourtilane", "Bir El Arch", "Bouandas", "Bougaa", "Djemila", "El Eulma", "Guenzet", "Guidjel", "Hammam Guergour", "Hammam Sokhna", "Maoklane", "Salah Bey", "Setif"],
+        "daira_names_ar": ["العلمة", "بئر العرش", "بابور", "بني عزيز", "بني ورتيلان", "بوعنداس", "بوقاعة", "جميلة", "حمام السخنة", "حمام قرقور", "سطيف", "صالح باي", "عموشة", "عين أرنات", "عين أزال", "عين الكبيرة", "عين ولمان", "قجال", "قنزات", "ماوكلان"]
+    },
+    {
+        "wilaya_name": "Sidi Bel Abbès",
+        "wilaya_name_ar": "سيدي بلعباس",
+        "daira_names": ["Ain El Berd", "Ben Badis", "Marhoum", "Merine", "Mostefa  Ben Brahim", "Moulay Slissen", "Ras El Ma", "Sfisef", "Sidi Ali Ben Youb", "Sidi Ali Boussidi", "Sidi Bel Abbes", "Sidi Lahcene", "Telagh", "Tenira", "Tessala"],
+        "daira_names_ar": ["بن باديس", "تسالة", "تلاغ", "تنيرة", "راس الماء", "سفيزف", "سيدي بلعباس", "سيدي علي بن يوب", "سيدي علي بوسيدي", "سيدي لحسن", "عين البرد", "مرحوم", "مرين", "مصطفى بن ابراهيم", "مولاي سليسن"]
+    },
+    {
+        "wilaya_name": "Skikda",
+        "wilaya_name_ar": "سكيكدة",
+        "daira_names": ["Ain Kechra", "Azzaba", "Ben Azzouz", "Collo", "El Hadaiek", "El Harrouch", "Ouled Attia", "Oum Toub", "Ramdane Djamel", "Sidi Mezghiche", "Skikda", "Tamalous", "Zitouna"],
+        "daira_names_ar": ["أم الطوب", "أولاد عطية", "الحدائق", "الحروش", "الزيتونة", "القل", "بن عزوز", "تمالوس", "رمضان جمال", "سكيكدة", "سيدي مزغيش", "عزابة", "عين قشرة"]
+    },
+    {
+        "wilaya_name": "Souk Ahras",
+        "wilaya_name_ar": "سوق أهراس",
+        "daira_names": ["Bir Bouhouche", "Haddada", "M'daourouche", "Mechroha", "Merahna", "Ouled Driss", "Oum El Adhaim", "Sedrata", "Souk Ahras", "Taoura"],
+        "daira_names_ar": ["أم العظايم", "أولاد إدريس", "الحدادة", "المراهنة", "المشروحة", "بئر بوحوش", "تاورة", "سدراتة", "سوق أهراس", "مداوروش"]
+    },
+    {
+        "wilaya_name": "Tamanrasset",
+        "wilaya_name_ar": "تمنراست",
+        "daira_names": ["Silet", "Tamanrasset", "Tazrouk"],
+        "daira_names_ar": ["تاظروك", "تمنراست", "سيلت"]
+    },
+    {
+        "wilaya_name": "Tébessa",
+        "wilaya_name_ar": "تبسة",
+        "daira_names": ["Bir El Ater", "Bir Mokadem", "Cheria", "El Aouinet", "El Kouif", "El Malabiod", "El Ogla", "Morsott", "Negrine", "Ouenza", "Oum Ali", "Tebessa"],
+        "daira_names_ar": ["أم علي", "الشريعة", "العقلة", "العوينات", "الكويف", "الماء الابيض", "الونزة", "بئر العاتر", "بئر مقدم", "تبسة", "مرسط", "نقرين"]
+    },
+    {
+        "wilaya_name": "Tiaret",
+        "wilaya_name_ar": "تيارت",
+        "daira_names": ["Ain Deheb", "Ain Kermes", "Dahmouni", "Frenda", "Hamadia", "Ksar Chellala", "Mahdia", "Mechraa Sfa", "Medroussa", "Meghila", "Oued Lili", "Rahouia", "Sougueur", "Tiaret"],
+        "daira_names_ar": ["السوقر", "تيارت", "حمادية", "دحموني", "رحوية", "عين الذهب", "عين كرمس", "فرندة", "قصر الشلالة", "مدروسة", "مشرع الصفا", "مغيلة", "مهدية", "وادي ليلي"]
+    },
+    {
+        "wilaya_name": "Timimoun",
+        "wilaya_name_ar": "تيميمون",
+        "daira_names": ["Aougrout", "Charouine", "Timimoun", "Tinerkouk"],
+        "daira_names_ar": ["أوقروت", "تنركوك", "تيميمون", "شروين"]
+    },
+    {
+        "wilaya_name": "Tindouf",
+        "wilaya_name_ar": "تندوف",
+        "daira_names": ["Tindouf"],
+        "daira_names_ar": ["تندوف"]
+    },
+    {
+        "wilaya_name": "Tipaza",
+        "wilaya_name_ar": "تيبازة",
+        "daira_names": ["Ahmar El Ain", "Bou Ismail", "Cherchell", "Damous", "Fouka", "Gouraya", "Hadjout", "Kolea", "Sidi Amar", "Tipaza"],
+        "daira_names_ar": ["أحمر العين", "الداموس", "القليعة", "بواسماعيل", "تيبازة", "حجوط", "سيدي أعمر", "شرشال", "فوكة", "قوراية"]
+    },
+    {
+        "wilaya_name": "Tissemsilt",
+        "wilaya_name_ar": "تيسمسيلت",
+        "daira_names": ["Ammari", "Bordj Bounaama", "Bordj Emir Abdelkader", "Khemisti", "Lardjem", "Lazharia", "Theniet El Had", "Tissemsilt"],
+        "daira_names_ar": ["الأزهرية", "برج الأمير عبد القادر", "برج بونعامة", "تيسمسيلت", "ثنية الاحد", "خميستي", "عماري", "لرجام"]
+    },
+    {
+        "wilaya_name": "Tizi Ouzou",
+        "wilaya_name_ar": "تيزي وزو",
+        "daira_names": ["Ain El Hammam", "Azazga", "Azeffoun", "Beni Douala", "Benni Yenni", "Boghni", "Bouzeguene", "Draa Ben Khedda", "Draa El Mizan", "Iferhounene", "Larbaa Nath Iraten", "Maatkas", "Makouda", "Mekla", "Ouacif", "Ouadhias", "Ouaguenoun", "Tigzirt", "Tizi Ouzou", "Tizi Rached", "Tizi-Ghenif"],
+        "daira_names_ar": ["أزفون", "إفرحونان", "الأربعاء ناث إيراثن", "بني دوالة", "بني يني", "بوزقن", "بوغني", "تيزي راشد", "تيزي غنيف", "تيزي وزو", "تيقزيرت", "ذراع الميزان", "ذراع بن خدة", "عزازقة", "عين الحمام", "ماكودة", "معاتقة", "مقلع", "واسيف", "واضية", "واقنون"]
+    },
+    {
+        "wilaya_name": "Tlemcen",
+        "wilaya_name_ar": "تلمسان",
+        "daira_names": ["Ain Tellout", "Bab El Assa", "Beni Boussaid", "Beni Snous", "Bensekrane", "Chetouane", "Fellaoucene", "Ghazaouet", "Hennaya", "Honnaine", "Maghnia", "Mansourah", "Marsa Ben Mehdi", "Nedroma", "Ouled Mimoun", "Remchi", "Sabra", "Sebdou", "Sidi Djillali", "Tlemcen"],
+        "daira_names_ar": ["أولاد ميمون", "الحناية", "الرمشي", "الغزوات", "باب العسة", "بن سكران", "بني بوسعيد", "بني سنوس", "تلمسان", "سبدو", "سيدي الجيلالي", "شتوان", "صبرة", "عين تالوت", "فلاوسن", "مرسى بن مهيدي", "مغنية", "منصورة", "ندرومة", "هنين"]
+    },
+    {
+        "wilaya_name": "Touggourt",
+        "wilaya_name_ar": "تقرت",
+        "daira_names": ["El-Hadjira", "Megarine", "Taibet", "Temacine", "Touggourt"],
+        "daira_names_ar": ["الحجيرة", "الطيبات", "المقارين", "تقرت", "تماسين"]
+    }
+];
+
+console.log("Loaded complete Algeria data:", algeriaData.length, "wilayas");

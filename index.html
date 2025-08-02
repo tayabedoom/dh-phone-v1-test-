@@ -6,8 +6,8 @@
     <title>DH Phone | Premium Mobile Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="index.css">
-    <script src="index.js?v=2" defer></script>
+    <link rel="stylesheet" href="hamburger-menu.css">
+    <script src="hamburger-menu.js" defer></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -31,89 +31,21 @@
     </style>
 </head>
 <body class="bg-white text-slate-800 dark:bg-dark-900 dark:text-slate-100 transition-colors duration-300">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 header-glass shadow-sm animate-slide-down">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-12 md:h-16 items-center">
+    <!-- Simple Header with Logo -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
             <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-            <a href="index.html" class="flex items-center space-x-2 logo-link" style="direction: ltr;">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center shadow-lg">
-                            <span class="text-white font-bold text-lg md:text-xl">DH</span>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-xl">DH</span>
                 </div>
-                        <span class="text-2xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 bg-clip-text text-transparent" data-en="Phone" data-fr="Téléphone" data-ar="Phone">Phone</span>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phone</span>
                     </a>
-                </div>
-                <!-- Right side - Navigation and Controls -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <!-- Navigation Links -->
-                    <div class="flex items-center space-x-8" style="direction: ltr;">
-                        <a href="index.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline active" data-en="Home" data-fr="Accueil" data-ar="الصفحة الرئيسية">Home</a>
-                        <a href="porduct.html" class="text-primary-600 dark:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-                        <a href="Contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-                    </div>
-                    <!-- Language Selector -->
-                    <div class="relative">
-                        <button id="language-toggle" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
-                            <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                        </button>
-                        <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
-                            <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-                            <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-                            <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-                        </div>
-                    </div>
-                    <!-- Dark Mode Toggle -->
-                    <button id="theme-toggle" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ml-8">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block"></i>
-                    </button>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center space-x-3">
-                    <button id="theme-toggle-mobile" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block"></i>
-                    </button>
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-            <!-- Mobile menu -->
-            <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
-                <!-- Mobile menu header with close button -->
-                <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-                    <span class="text-lg font-bold text-gray-800 dark:text-gray-200">Menu</span>
-                    <button id="mobile-menu-close" class="text-2xl text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100 focus:outline-none">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <!-- Navigation links -->
-                <div style="direction: ltr;">
-                <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
-                <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-                <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-                </div>
-                
-                <!-- Language Selector Mobile -->
-                <div class="flex items-center px-3 py-2 space-x-4">
-                    <div class="relative">
-                        <button id="language-toggle-mobile" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
-                            <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                        </button>
-                        <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
-                            <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-                            <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-                            <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-                        </div>
                     </div>
                 </div>
             </div>
-        </nav>
     </header>
 
     <!-- Hero Section -->
@@ -139,8 +71,8 @@
                                 <div class="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center mx-auto mb-3 md:mb-4">
                                     <span class="text-white text-lg md:text-2xl font-bold">DH</span>
                                 </div>
-                                <h3 class="text-lg md:text-xl font-bold mb-2" data-en="DH Phone" data-fr="DH Phone" data-ar="DH Phone">DH Phone</h3>
-                                <p class="text-xs md:text-sm opacity-80" data-en="Your phone shop" data-fr="Votre magasin de téléphones" data-ar="متجرك للهواتف">Your phone shop</p>
+                                <h3 class="text-lg md:text-xl font-bold mb-2" data-en="DH Phone" data-fr="DH Téléphone">DH Phone</h3>
+                                <p class="text-xs md:text-sm opacity-80" data-en="Your phone shop" data-fr="Votre magasin de téléphones">Your phone shop</p>
                             </div>
                         </div>
                     </div>
@@ -245,36 +177,7 @@
         </div>
     </footer>
 
-    <!-- Overlay for mobile menu -->
-    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden"></div>
-    <!-- Mobile menu as sliding drawer -->
-    <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-slate-900 shadow-lg z-50 transform translate-x-full transition-transform duration-300 md:hidden">
-      <div class="flex flex-col h-full">
-        <div class="flex items-center justify-between px-4 py-4 border-b border-slate-200 dark:border-slate-700">
-          <span class="text-xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 text-transparent bg-clip-text" data-en="DH Phone" data-fr="DH Téléphone" data-ar="DH Phone">DH Phone</span>
-          <button id="mobile-menu-close" class="text-2xl focus:outline-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">&times;</button>
-        </div>
-        <nav class="flex-1 flex flex-col space-y-2 px-4 py-6">
-          <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
-          <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-          <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-        </nav>
-        <div class="px-4 pb-6">
-          <!-- Mobile Language Dropdown -->
-          <div class="relative">
-            <button id="language-toggle-mobile" class="w-full flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg focus:outline-none">
-              <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-              <i class="fas fa-chevron-down ml-2 text-xs"></i>
-            </button>
-            <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
-              <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-              <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-              <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+
 
     <!-- Add this before closing </body> tag -->
 <script src="https://sdks.shopifycdn.com/js-buy-sdk/v2/latest/index.umd.min.js"></script>
@@ -509,7 +412,6 @@
   });
 
 </script>
-<script src="theme.js" defer></script>
-<script src="lang.js" defer></script>
+
 </body>
 </html>

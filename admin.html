@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Content Admin | <span translate="no" class="notranslate">DH Phone</span></title>
+    <title>Dynamic Content Admin | DH Phone</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Firebase SDK -->
@@ -1696,46 +1696,5 @@
         document.body.style.overflow = 'hidden';
     })();
     </script>
-    <script>
-    // Mobile menu animation logic for admin page
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileMenuClose = document.getElementById('mobile-menu-close');
-
-    function openMobileMenu() {
-      if (mobileMenu) {
-        mobileMenu.classList.remove('hidden', 'menu-slide-out');
-        void mobileMenu.offsetWidth;
-        mobileMenu.classList.add('menu-slide-in');
-      }
-    }
-    function closeMobileMenu() {
-      if (mobileMenu) {
-        mobileMenu.classList.remove('menu-slide-in');
-        mobileMenu.classList.add('menu-slide-out');
-        mobileMenu.addEventListener('animationend', function handler() {
-          mobileMenu.classList.add('hidden');
-          mobileMenu.classList.remove('menu-slide-out');
-          mobileMenu.removeEventListener('animationend', handler);
-        });
-      }
-    }
-    function toggleMobileMenu() {
-      if (mobileMenu.classList.contains('hidden')) {
-        openMobileMenu();
-      } else {
-        closeMobileMenu();
-      }
-    }
-    if (mobileMenuButton) {
-      mobileMenuButton.addEventListener('click', toggleMobileMenu);
-    }
-    if (mobileMenuClose) {
-      mobileMenuClose.addEventListener('click', closeMobileMenu);
-    }
-    </script>
 </body>
 </html>
-
-
-

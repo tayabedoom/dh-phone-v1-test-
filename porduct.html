@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="Products | <span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-fr="Produits | <span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-ar="المنتجات | <span translate=\"no\" class=\"notranslate\">DH Phone</span>">Products | <span translate="no" class="notranslate">DH Phone</span></title>
+    <title data-en="Products | DH Phone" data-fr="Produits | DH Phone" data-ar="المنتجات | DH Phone">Products | DH Phone</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="porduct.css">
+    <link rel="stylesheet" href="hamburger-menu.css">
+    <script src="hamburger-menu.js" defer></script>
     <script src="config.js?v=1703123456789"></script>
     <script>
         // Simple Shopify Integration - No config dependencies
@@ -548,6 +550,48 @@
             border-color: #818cf8;
             color: #818cf8;
         }
+        /* Scroll and overflow fixes */
+        html, body {
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+        
+        /* Ensure content is visible */
+        .product-grid {
+            min-height: 400px;
+            position: relative;
+        }
+        
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: rgba(79, 70, 229, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .scroll-indicator.show {
+            display: block;
+        }
+        
         /* RTL specific styles */
         [dir="rtl"] .ml-10 {
             margin-right: 2.5rem;
@@ -593,62 +637,25 @@
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300 font-sans">
-    <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-800/80 header-glass shadow-sm">
-        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-12 md:h-16 items-center">
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300 font-sans overflow-x-hidden">
+    <!-- Simple Header with Logo -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
                 <!-- Logo -->
                 <div class="flex-shrink-0 flex items-center">
-                    <a href="index.html" class="flex items-center space-x-2 logo-link" style="direction: ltr;">
-                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-light dark:bg-primary-dark flex items-center justify-center shadow-lg">
-                            <span class="text-white font-bold text-lg md:text-xl">DH</span>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-xl">DH</span>
                         </div>
-                        <span class="text-2xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 bg-clip-text text-transparent" data-en="Phone" data-fr="Téléphone" data-ar="Phone">Phone</span>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phone</span>
                     </a>
-                </div>
-                <!-- Right side - Navigation and Controls -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <!-- Navigation Links -->
-                    <div class="flex items-center space-x-8" style="direction: ltr;">
-                        <a href="index.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الصفحة الرئيسية">Home</a>
-                        <a href="porduct.html" class="text-primary-600 dark:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline active" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-                        <a href="Contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
                     </div>
-                    <!-- Language Selector -->
-                    <div class="relative">
-                        <button id="language-toggle" class="flex items-center text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400">
-                            <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                        </button>
-                        <div id="language-dropdown" class="hidden absolute right-0 mt-2 w-24 bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-10 border border-gray-200 dark:border-slate-600">
-                            <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-                            <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-                            <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-                        </div>
-                    </div>
-                    <!-- Dark Mode Toggle -->
-                    <button id="theme-toggle" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors ml-8">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block"></i>
-                    </button>
-                </div>
-                <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center space-x-3">
-                    <button id="theme-toggle-mobile" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block"></i>
-                    </button>
-                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
                 </div>
             </div>
-            
-        </nav>
     </header>
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-h-screen overflow-y-auto">
         <!-- Page Title -->
         <section class="text-center mb-8 animate-fade-in">
             <h1 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent" data-en="Our Products" data-fr="Nos Produits" data-ar="منتجاتنا">Our Products</h1>
@@ -676,8 +683,8 @@
             </div>
         </div>
         <!-- Product Grid -->
-        <div class="flex-1">
-            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div class="flex-1 overflow-y-auto">
+            <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 product-grid">
                 <!-- Skeleton Loaders -->
                 <div class="product-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-lg">
                     <div class="h-48 skeleton"></div>
@@ -726,13 +733,18 @@
             </div>
         </div>
     </main>
+    <!-- Scroll to top button -->
+    <div id="scroll-to-top" class="scroll-indicator" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
     <!-- Footer -->
     <footer class="bg-gray-900 text-white mt-8 md:mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
                 <!-- Company Info -->
                 <div class="col-span-1 md:col-span-2">
-                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ <span translate="no" class="notranslate">DH Phone</span></h3>
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ DH Phone</h3>
                     <p class="text-sm md:text-base text-gray-300 mb-3 md:mb-4">Your trusted partner for all your phone needs. Quality products, excellent service, and unbeatable prices.</p>
                     <div class="flex space-x-3 md:space-x-4">
                         <!-- Facebook Icon -->
@@ -777,7 +789,7 @@
             <div class="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-xs md:text-sm text-gray-400 text-center md:text-left">
-                        © 2025 <span translate="no" class="notranslate">DH Phone</span>. All rights reserved.
+                        © 2025 DH Phone. All rights reserved.
                     </p>
                     <div class="flex items-center space-x-2 mt-3 md:mt-0">
                         <span class="text-xs md:text-sm text-gray-400">Made with</span>
@@ -790,205 +802,68 @@
             </div>
         </div>
     </footer>
-
-    <!-- Overlay for mobile menu -->
-    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black bg-opacity-40 z-40 hidden"></div>
-    <!-- Mobile menu as sliding drawer -->
-    <div id="mobile-menu" class="fixed top-0 right-0 w-64 h-full bg-white dark:bg-slate-900 shadow-lg z-50 transform translate-x-full transition-transform duration-300 md:hidden">
-      <div class="flex flex-col h-full">
-        <div class="flex items-center justify-between px-4 py-4 border-b border-slate-200 dark:border-slate-700">
-          <span class="text-xl font-bold bg-gradient-to-r from-primary-light to-blue-500 dark:from-primary-dark dark:to-blue-400 text-transparent bg-clip-text" data-en="DH Phone" data-fr="DH Téléphone" data-ar="DH Phone">DH Phone</span>
-          <button id="mobile-menu-close" class="text-2xl focus:outline-none text-gray-600 hover:text-gray-800 dark:text-gray-300 dark:hover:text-gray-100">&times;</button>
-        </div>
-        <nav class="flex-1 flex flex-col space-y-2 px-4 py-6">
-          <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
-          <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-          <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-        </nav>
-        <div class="px-4 pb-6">
-          <!-- Mobile Language Dropdown -->
-          <div class="relative">
-            <button id="language-toggle-mobile" class="w-full flex items-center justify-between px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg focus:outline-none">
-              <span class="text-sm font-medium" data-en="EN" data-fr="FR" data-ar="AR">EN</span>
-              <i class="fas fa-chevron-down ml-2 text-xs"></i>
-            </button>
-            <div id="language-dropdown-mobile" class="hidden absolute left-0 mt-2 w-full bg-white dark:bg-slate-700 rounded-lg shadow-lg py-1 z-20 border border-gray-200 dark:border-slate-600">
-              <button data-lang="en" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">English</button>
-              <button data-lang="fr" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option">Français</button>
-              <button data-lang="ar" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 w-full text-left transition-colors lang-option" dir="rtl">العربية</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <script src="theme.js" defer></script>
-    
-    <script src="index.js" defer></script>
+    <script src="lang.js" defer></script>
     <script>
-        // Language toggle functionality (reusable)
-        (function() {
-            let langToggle, langDropdown, langToggleMobile, langDropdownMobile;
-            const html = document.documentElement;
-            
-            function setLang(language) {
-                if (language === 'ar') {
-                    html.setAttribute('lang', 'ar');
-                    html.setAttribute('dir', 'rtl');
-                    localStorage.setItem('lang', 'ar');
-                } else if (language === 'fr') {
-                    html.setAttribute('lang', 'fr');
-                    html.setAttribute('dir', 'ltr');
-                    localStorage.setItem('lang', 'fr');
+        // Scroll to top function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollButton = document.getElementById('scroll-to-top');
+            if (scrollButton) {
+                if (window.pageYOffset > 300) {
+                    scrollButton.classList.add('show');
                 } else {
-                    html.setAttribute('lang', 'en');
-                    html.setAttribute('dir', 'ltr');
-                    localStorage.setItem('lang', 'en');
+                    scrollButton.classList.remove('show');
                 }
-                
-                // Update language display in toggle buttons
-                const langToggleSpan = document.querySelector('#language-toggle span');
-                const langToggleMobileSpan = document.querySelector('#language-toggle-mobile span');
-                
-                if (langToggleSpan) {
-                    langToggleSpan.textContent = language.toUpperCase();
-                }
-                if (langToggleMobileSpan) {
-                    langToggleMobileSpan.textContent = language.toUpperCase();
-                }
-                
-                // Update all translatable elements
-                document.querySelectorAll('[data-' + language + ']').forEach(element => {
-                    const text = element.getAttribute('data-' + language);
-                    if (text) {
-                        element.textContent = text;
-                    }
+            }
+        });
+        
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.remove('hidden');
                 });
             }
-            
-            function closeLangDropdown() {
-                if (langDropdown) {
-                    langDropdown.classList.add('hidden');
-                    langToggle.setAttribute('aria-expanded', 'false');
-                }
-                if (langDropdownMobile) {
-                    langDropdownMobile.classList.add('hidden');
-                }
-            }
-            
-            function openLangDropdown() {
-                if (langDropdown) {
-                    langDropdown.classList.remove('hidden');
-                    langToggle.setAttribute('aria-expanded', 'true');
-                }
-            }
-            
-            function initLanguageToggle() {
-                // Get elements
-                langToggle = document.getElementById('language-toggle');
-                langDropdown = document.getElementById('language-dropdown');
-                langToggleMobile = document.getElementById('language-toggle-mobile');
-                langDropdownMobile = document.getElementById('language-dropdown-mobile');
-                
-                // Set initial language
-                const savedLang = localStorage.getItem('lang') || 'en';
-                setLang(savedLang);
-                
-                // Desktop language toggle
-                if (langToggle && langDropdown) {
-                    langToggle.setAttribute('aria-haspopup', 'listbox');
-                    langToggle.setAttribute('aria-expanded', 'false');
-                    langDropdown.setAttribute('role', 'listbox');
-                    
-                    langToggle.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        if (langDropdown.classList.contains('hidden')) {
-                            openLangDropdown();
-                        } else {
-                            closeLangDropdown();
-                        }
-                    });
-                    
-                    // Close dropdown when clicking outside
-                    document.addEventListener('click', function(e) {
-                        if (!langToggle.contains(e.target) && !langDropdown.contains(e.target)) {
-                            closeLangDropdown();
-                        }
-                    });
-                    
-                    // Keyboard navigation
-                    langToggle.addEventListener('keydown', function(e) {
-                        if (e.key === 'Escape') {
-                            closeLangDropdown();
-                        } else if (e.key === 'ArrowDown') {
-                            e.preventDefault();
-                            openLangDropdown();
-                            const firstOption = langDropdown.querySelector('.lang-option');
-                            if (firstOption) firstOption.focus();
-                        }
-                    });
-                    
-                    // Language option selection
-                    langDropdown.querySelectorAll('.lang-option').forEach(option => {
-                        option.setAttribute('tabindex', '0');
-                        option.addEventListener('click', function() {
-                            const selectedLang = this.getAttribute('data-lang');
-                            setLang(selectedLang);
-                            closeLangDropdown();
-                        });
-                        
-                        option.addEventListener('keydown', function(e) {
-                            if (e.key === 'Escape') {
-                                closeLangDropdown();
-                                langToggle.focus();
-                            } else if (e.key === 'ArrowDown') {
-                                e.preventDefault();
-                                const next = this.nextElementSibling;
-                                if (next) next.focus();
-                            } else if (e.key === 'ArrowUp') {
-                                e.preventDefault();
-                                const prev = this.previousElementSibling;
-                                if (prev) prev.focus();
-                                else langToggle.focus();
-                            } else if (e.key === 'Enter' || e.key === ' ') {
-                                e.preventDefault();
-                                this.click();
-                            }
-                        });
-                    });
-                }
 
-                // Mobile language toggle
-                if (langToggleMobile && langDropdownMobile) {
-                    langToggleMobile.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        langDropdownMobile.classList.toggle('hidden');
-                    });
+            if (mobileMenuClose && mobileMenu) {
+                mobileMenuClose.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            }
 
-                    // Handle mobile language selection
-                    langDropdownMobile.querySelectorAll('.lang-option').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const selectedLang = e.target.getAttribute('data-lang');
-                            setLang(selectedLang);
-                            langDropdownMobile.classList.add('hidden');
-                        });
-                    });
-
-                    // Close mobile dropdown when clicking outside
-                    window.addEventListener('click', function(e) {
-                        if (!langToggleMobile.contains(e.target) && !langDropdownMobile.contains(e.target)) {
-                            langDropdownMobile.classList.add('hidden');
-                        }
-                    });
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (mobileMenu && !mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
                 }
-            }
+            });
             
-            // Initialize when DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initLanguageToggle);
-            } else {
-                initLanguageToggle();
-            }
-        })(); 
+            // Add smooth scrolling to all internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

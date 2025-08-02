@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍔 Enhanced Hamburger Menu Demo | DH Phone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="hamburger-menu.css">
+    <script src="hamburger-menu.js" defer></script>
+    <style>
+        .demo-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 1rem;
+            text-align: center;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .icon-demo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200">
+    <!-- Simple Header with Logo -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-xl">DH</span>
+                        </div>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phone</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Demo Section -->
+    <section class="demo-section">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-16">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white">
+                    🍔 Enhanced Hamburger Menu
+                </h1>
+                <p class="text-xl text-white/90 max-w-3xl mx-auto">
+                    Experience the improved hamburger menu with smooth animations, color transitions, and delightful interactions!
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="feature-card">
+                    <div class="icon-demo">🎨</div>
+                    <h3 class="text-xl font-bold mb-2">Color Transitions</h3>
+                    <p>Beautiful gradient changes from blue to red/green when active</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon-demo">⚡</div>
+                    <h3 class="text-xl font-bold mb-2">Smooth Animations</h3>
+                    <p>Cubic-bezier easing for natural, fluid movements</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon-demo">🔄</div>
+                    <h3 class="text-xl font-bold mb-2">Rotation Effects</h3>
+                    <p>Icon rotates and transforms into an X with style</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon-demo">💫</div>
+                    <h3 class="text-xl font-bold mb-2">Hover Effects</h3>
+                    <p>Interactive hover states with scale and rotation</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 text-center">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-4 text-white">✨ New Features</h2>
+                    <ul class="text-left space-y-3 text-white/90">
+                        <li class="flex items-center space-x-3">
+                            <span class="text-green-400 text-xl">✓</span>
+                            <span>Larger, more prominent button (56px)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="text-green-400 text-xl">✓</span>
+                            <span>Enhanced icon with rounded corners</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="text-green-400 text-xl">✓</span>
+                            <span>Color-coded X transformation (red/green)</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="text-green-400 text-xl">✓</span>
+                            <span>Pulse animation on menu open</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="text-green-400 text-xl">✓</span>
+                            <span>Backdrop blur and glass effect</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <span class="text-green-400 text-xl">✓</span>
+                            <span>Improved responsive design</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <p class="text-white/80 text-lg">
+                    <strong>Look for the hamburger button in the top-right corner! 🍔</strong>
+                </p>
+                <p class="text-white/60 mt-2">
+                    Click it to see the enhanced animations in action
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm text-gray-400">
+                © 2024 DH Phone. Enhanced hamburger menu demo.
+            </p>
+        </div>
+    </footer>
+</body>
+</html> 

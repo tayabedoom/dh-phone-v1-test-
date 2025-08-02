@@ -289,17 +289,3 @@
         transform: translateX(-100%);
     }
 } 
-
-/* Mobile menu open/close animation classes */
-.menu-slide-in {
-  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-.menu-slide-out {
-  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-[dir="rtl"] .menu-slide-in {
-  animation: slideInRTL 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-[dir="rtl"] .menu-slide-out {
-  animation: slideOutRTL 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-} 

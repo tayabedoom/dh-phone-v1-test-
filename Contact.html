@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="Contact Us | <span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-fr="Contactez-nous | <span translate=\"no\" class=\"notranslate\">DH Phone</span>" data-ar="اتصل بنا | <span translate=\"no\" class=\"notranslate\">DH Phone</span>">Contact Us | <span translate="no" class="notranslate">DH Phone</span></title>
+    <title data-en="Contact Us | DH Phone" data-fr="Contactez-nous | DH Phone" data-ar="اتصل بنا | DH Phone">Contact Us | DH Phone</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="stylesheet" href="Contact.css">
+    <link rel="stylesheet" href="hamburger-menu.css">
+    <script src="hamburger-menu.js" defer></script>
     <script src="Contact.js" defer></script>
     <script>
         tailwind.config = {
@@ -445,66 +447,20 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300">
-    <!-- Header: Replace with unified navigation bar -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-dark-900/80 header-glass border-b border-slate-200 dark:border-slate-800">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <!-- Logo -->
-            <a href="index.html" class="flex items-center space-x-2">
-                <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary-600 dark:bg-primary-500 flex items-center justify-center shadow-lg">
-                    <span class="text-white font-bold text-lg md:text-xl">DH</span>
-                </div>
-                <span class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Phone</span>
-            </a>
-            <!-- Navigation Links -->
-            <nav class="hidden md:flex space-x-6 rtl:space-x-reverse">
-                <a href="index.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الصفحة الرئيسية">Home</a>
-                <a href="porduct.html" class="text-primary-600 dark:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-                <a href="Contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 px-1 py-2 text-sm font-medium transition-colors nav-link btn-animated nav-link-underline active" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-            </nav>
-            
-            <!-- Mobile menu button -->
-            <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-            
-            <!-- Toggles -->
-            <div class="flex items-center space-x-4 rtl:space-x-reverse">
-                <!-- Dark Mode Toggle -->
-                <div class="relative group">
-                    <button id="dark-mode-toggle" class="focus:outline-none">
-                        <i id="moon-icon" class="fas fa-moon text-slate-700 transition-colors"></i>
-                        <i id="sun-icon" class="fas fa-sun text-yellow-400 hidden transition-colors"></i>
-                    </button>
-                </div>
-                <!-- Language Dropdown -->
-                <div class="relative">
-                    <button id="lang-toggle" class="flex items-center space-x-1 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark transition-colors">
-                        <span id="current-lang">EN</span>
-                        <i class="fas fa-chevron-down text-xs"></i>
-                    </button>
-                    <div id="lang-dropdown" class="absolute right-0 mt-2 w-32 bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-lg shadow-lg opacity-0 invisible transition-all duration-200 transform scale-95 origin-top-right">
-                        <div class="py-1">
-                            <button class="lang-option w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" data-lang="en" data-en="English" data-fr="Anglais" data-ar="الإنجليزية">
-                                <span class="flag">🇺🇸</span> <span class="lang-label">English</span>
-                            </button>
-                            <button class="lang-option w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" data-lang="fr" data-en="French" data-fr="Français" data-ar="الفرنسية">
-                                <span class="flag">🇫🇷</span> <span class="lang-label">Français</span>
-                            </button>
-                            <button class="lang-option w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors" data-lang="ar" data-en="Arabic" data-fr="Arabe" data-ar="العربية">
-                                <span class="flag">🇸🇦</span> <span class="lang-label">العربية</span>
-                            </button>
+    <!-- Simple Header with Logo -->
+    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                            <span class="text-white font-bold text-xl">DH</span>
                         </div>
-                    </div>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phone</span>
+                    </a>
                 </div>
             </div>
-        </div>
-        
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden pb-4 space-y-2">
-            <a href="index.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Home" data-fr="Accueil" data-ar="الرئيسية">Home</a>
-            <a href="porduct.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline" data-en="Products" data-fr="Produits" data-ar="المنتجات">Products</a>
-            <a href="Contact.html" class="block py-3 px-2 rounded-lg nav-link text-base btn-animated nav-link-underline active" data-en="Contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
-        </div>
         </div>
     </header>
 
@@ -662,7 +618,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-8">
                 <!-- Company Info -->
                 <div class="col-span-1 md:col-span-2">
-                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ <span translate="no" class="notranslate">DH Phone</span></h3>
+                    <h3 class="text-lg md:text-xl font-bold mb-3 md:mb-4">🛍️ DH Phone</h3>
                     <p class="text-sm md:text-base text-gray-300 mb-3 md:mb-4">Your trusted partner for all your phone needs. Quality products, excellent service, and unbeatable prices.</p>
                     <div class="flex space-x-3 md:space-x-4">
                         <!-- Facebook Icon -->
@@ -707,7 +663,7 @@
             <div class="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center">
                     <p class="text-xs md:text-sm text-gray-400 text-center md:text-left">
-                        © 2025 <span translate="no" class="notranslate">DH Phone</span>. All rights reserved.
+                        © 2025 DH Phone. All rights reserved.
                     </p>
                     <div class="flex items-center space-x-2 mt-3 md:mt-0">
                         <span class="text-xs md:text-sm text-gray-400">Made with</span>
@@ -807,7 +763,8 @@
                     
                     // Prepare Telegram message
                     const botToken = '7933495075:AAH2tvwxLUsSXtM4UzkSgSq4cb65k6qhSEI';
-                    const chatId = '6309865289';
+                    // DH-PHONE group chat ID
+                    const chatId = '-1002894581286';
                     const text = `New Contact Message:%0AName: ${name}%0AEmail: ${email}%0ASubject: ${subject}%0AMessage: ${message}`;
                     const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`;
 
