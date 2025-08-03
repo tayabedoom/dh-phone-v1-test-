@@ -273,7 +273,7 @@ function displayProducts(products) {
                     <div class="flex justify-between items-center">
                         <div class="price-tag">${currency} ${price}</div>
                         <button class="btn-primary px-4 py-2 rounded-lg text-white font-medium transition-all duration-200 hover:scale-105" 
-                                ${isAvailable ? `onclick="viewProduct('${product.handle}')"` : `onclick="window.location.href='Contact.html'"`} 
+                                ${isAvailable ? `onclick="viewProduct('${product.id}')"` : `onclick="window.location.href='Contact.html'"`} 
                                 ${!isAvailable ? 'disabled' : ''}>
                             ${isAvailable ? 'View Details' : 'Contact Us'}
                         </button>
@@ -382,9 +382,9 @@ function filterProducts() {
 }
 
 // View product details
-function viewProduct(handle) {
-    console.log('👁️ Viewing product:', handle);
-    window.location.href = `product-in.html?product=${handle}`;
+function viewProduct(id) {
+    console.log('👁️ Viewing product:', id);
+    window.location.href = `product-in.html?id=${id}`;
 }
 
 // Show error message

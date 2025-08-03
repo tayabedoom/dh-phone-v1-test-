@@ -122,9 +122,53 @@ This ensures the admin panel works even without Firebase configuration.
 - ✅ Landing page creation and management
 - ✅ Product feature and specification management
 - ✅ Shopify integration
+- ✅ Related products from Shopify
 - ✅ Firebase cloud storage (optional)
 - ✅ localStorage fallback
 - ✅ Delete functionality
 - ✅ Status indicators
 - ✅ Error handling
-- ✅ Dark mode support 
+- ✅ Dark mode support
+
+## Shopify Related Products Integration
+
+The product detail page (`product-in.html`) now fetches related products directly from Shopify instead of using local data. Here's how it works:
+
+### How Related Products Work
+
+1. **Primary Source**: Shopify GraphQL API
+   - Fetches related products based on product type and tags
+   - Uses product handle for navigation
+   - Falls back to broader search if not enough products found
+
+2. **Fallback Sources**: 
+   - Firebase (if configured)
+   - Sample products (if no other sources available)
+
+### Configuration
+
+Update your `config.js` with your Shopify credentials:
+
+```javascript
+window.config = {
+  shopify: {
+    domain: "your-store.myshopify.com",
+    accessToken: "your-storefront-access-token"
+  },
+  // ... other config
+};
+```
+
+### Related Products Algorithm
+
+1. **Smart Matching**: Uses product type and tags to find similar products
+2. **Broader Search**: If not enough related products found, searches for any available products
+3. **Fallback Chain**: Shopify → Firebase → Sample Products
+4. **Navigation**: Uses product handles for proper Shopify navigation
+
+### Benefits
+
+- **Real-time Data**: Always shows current inventory from Shopify
+- **Smart Recommendations**: Based on product type and tags
+- **Reliable Fallbacks**: Multiple data sources ensure products always display
+- **Proper Navigation**: Uses Shopify handles for correct product URLs 

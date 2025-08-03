@@ -1,615 +1,398 @@
-<oh!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-en="Contact Us | DH Phone" data-fr="Contactez-nous | DH Phone" data-ar="اتصل بنا | DH Phone">Contact Us | DH Phone</title>
+    <title>Contact Us | DH Phone</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <link rel="stylesheet" href="Contact.css">
-    <link rel="stylesheet" href="hamburger-menu.css">
-    <script src="hamburger-menu.js" defer></script>
-    <script src="Contact.js" defer></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                        },
-                        secondary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.5s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                    }
-                }
-            }
-        }
-    </script>
+    
+    <!-- Custom CSS -->
     <style>
-        :root {
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --dark-900: #0f172a;
+        /* Dark mode transition */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         
-        .primary-light { color: var(--primary-light); }
-        .primary-dark { color: var(--primary-dark); }
-        .bg-primary-light { background-color: var(--primary-light); }
-        .bg-primary-dark { background-color: var(--primary-dark); }
-        .bg-dark-900 { background-color: var(--dark-900); }
+        /* Smooth scrolling */
+        html { scroll-behavior: smooth; }
         
-        .nav-link {
-            @apply text-slate-600 dark:text-slate-300 hover:text-primary-light dark:hover:text-primary-dark transition-colors duration-200 font-medium relative;
-        }
-        
-        .nav-link.active {
-            @apply text-primary-light dark:text-primary-dark;
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(to right, var(--primary-light), var(--primary-dark));
-            transition: width 0.3s ease;
+        .animate-fade-in { animation: fadeInUp 0.6s ease-out; }
+        
+        /* Dark mode styles */
+        .dark {
+            color-scheme: dark;
         }
         
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
+        .dark body {
+            background-color: #0f172a;
+            color: #e2e8f0;
         }
         
-        /* Header glass effect */
-        .header-glass {
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-        
-        /* Language dropdown styles */
-        .lang-dropdown-open {
-            opacity: 1 !important;
-            visibility: visible !important;
-            transform: scale(1) !important;
-        }
-        
-        #lang-dropdown {
-            z-index: 1000;
-        }
-        
-        .lang-option {
-            cursor: pointer;
-        }
-        
-        .lang-option .flag {
-            margin-right: 8px;
-        }
-        
-        /* Dark mode navbar improvements */
-        .dark .header-glass {
-            background: rgba(15, 23, 42, 0.9) !important;
-            border-color: rgba(51, 65, 85, 0.8) !important;
-        }
-        
-        .dark .nav-link {
-            color: #cbd5e1 !important;
-        }
-        
-        .dark .nav-link:hover {
-            color: #60a5fa !important;
-        }
-        
-        .dark .nav-link.active {
-            color: #3b82f6 !important;
-        }
-        
-        /* Mobile menu dark mode improvements */
-        .dark #mobile-menu {
-            background: rgba(15, 23, 42, 0.95);
-            border-top: 1px solid rgba(51, 65, 85, 0.8);
-        }
-        
-        .dark #mobile-menu a {
-            color: #cbd5e1 !important;
-        }
-        
-        .dark #mobile-menu a:hover {
-            background: rgba(51, 65, 85, 0.8) !important;
-        }
-        
-        /* Enhanced floating label styles */
-        .floating-label {
-            @apply absolute left-4 top-4 text-slate-500 dark:text-slate-400 transition-all duration-300 pointer-events-none transform origin-left;
-        }
-        
-        .floating-label.active,
-        .form-input:focus-within .floating-label,
-        .form-input input:not(:placeholder-shown) + .floating-label,
-        .form-input textarea:not(:placeholder-shown) + .floating-label,
-        .form-input select:focus + .floating-label,
-        .form-input select:not([value=""]) + .floating-label {
-            @apply -top-2 left-3 text-xs text-primary-light dark:text-primary-dark bg-white dark:bg-slate-900 px-2 transform scale-90;
-        }
-
-        /* Ensure floating labels work properly */
-        .form-input input:focus + .floating-label,
-        .form-input textarea:focus + .floating-label,
-        .form-input select:focus + .floating-label,
-        .form-input input:not(:placeholder-shown) + .floating-label,
-        .form-input textarea:not(:placeholder-shown) + .floating-label,
-        .form-input select:not([value=""]) + .floating-label {
-            transform: translateY(-1.5rem) scale(0.85) !important;
-            color: #3b82f6 !important;
-            z-index: 2 !important;
-        }
-        
-        .dark .form-input input:focus + .floating-label,
-        .dark .form-input textarea:focus + .floating-label,
-        .dark .form-input select:focus + .floating-label,
-        .dark .form-input input:not(:placeholder-shown) + .floating-label,
-        .dark .form-input textarea:not(:placeholder-shown) + .floating-label,
-        .dark .form-input select:not([value=""]) + .floating-label {
-            color: #6366f1 !important;
-        }
-
-        /* Override conflicting styles */
-        .form-input label.floating-label {
-            left: 1rem !important;
-            right: auto !important;
-            background: #fff !important;
-            padding: 0 0.25rem !important;
-            z-index: 2 !important;
-            pointer-events: none !important;
-            position: absolute !important;
-        }
-        
-        .dark .form-input label.floating-label {
-            background: #334155 !important;
-        }
-        
-        .form-input:focus-within label,
-        .form-input input:not(:placeholder-shown) + label,
-        .form-input textarea:not(:placeholder-shown) + label,
-        .form-input select:focus + label,
-        .form-input select:not([value=""]) + label {
-            transform: translateY(-1.5rem) scale(0.85) !important;
-            color: #4f46e5 !important;
-            z-index: 2 !important;
-        }
-        
-        .dark .form-input:focus-within label,
-        .dark .form-input input:not(:placeholder-shown) + label,
-        .dark .form-input textarea:not(:placeholder-shown) + label,
-        .dark .form-input select:focus + label,
-        .dark .form-input select:not([value=""]) + label {
-            color: #6366f1 !important;
-            z-index: 2 !important;
-        }
-        
-        .form-input input,
-        .form-input textarea,
-        .form-input select {
-            padding-top: 2.2rem !important;
-        }
-        
-        /* RTL support */
-        [dir="rtl"] .floating-label {
-            @apply right-3 left-auto;
-        }
-        
-        [dir="rtl"] .floating-label.active {
-            @apply -top-2 right-2 left-auto;
-        }
-        /* Custom styles for elements that need more precise control */
-        .contact-card {
-            transition: all 0.3s ease;
-        }
-        .contact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-        .dark .contact-card:hover {
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        }
-        .form-input {
-            position: relative;
-        }
-        .floating-label {
-            transition: all 0.2s ease-out;
-        }
-        .map-container {
-            filter: grayscale(30%) contrast(90%);
-        }
-        .dark .map-container {
-            filter: grayscale(30%) contrast(90%) invert(90%);
-        }
-        /* RTL support for Arabic */
-        [dir="rtl"] .flex:not(.flex-col):not(.flex-row-reverse) {
-            flex-direction: row-reverse;
-        }
-        [dir="rtl"] .text-left {
-            text-align: right;
-        }
-        [dir="rtl"] .text-right {
-            text-align: left;
-        }
-        [dir="rtl"] .ml-2 {
-            margin-left: 0 !important;
-            margin-right: 0.5rem !important;
-        }
-        [dir="rtl"] .mr-2 {
-            margin-right: 0 !important;
-            margin-left: 0.5rem !important;
-        }
-        [dir="rtl"] .ml-auto {
-            margin-left: 0;
-            margin-right: auto;
-        }
-        [dir="rtl"] .space-x-4 > * + * {
-            margin-left: 0 !important;
-            margin-right: 1rem !important;
-        }
-        [dir="rtl"] .space-x-6 > * + * {
-            margin-left: 0 !important;
-            margin-right: 1.5rem !important;
-        }
-        [dir="rtl"] .space-x-8 > * + * {
-            margin-left: 0 !important;
-            margin-right: 2rem !important;
-        }
-        [dir="rtl"] .ml-1 { margin-left: 0 !important; margin-right: 0.25rem !important; }
-        [dir="rtl"] .mr-1 { margin-right: 0 !important; margin-left: 0.25rem !important; }
-        [dir="rtl"] .mx-2 { margin-left: 0.5rem !important; margin-right: 0.5rem !important; }
-        [dir="rtl"] .mx-4 { margin-left: 1rem !important; margin-right: 1rem !important; }
-        [dir="rtl"] .gap-8 { gap: 2rem !important; }
-        [dir="rtl"] .icon-rtl-margin {
-            margin-left: 0.5rem !important;
-            margin-right: 0 !important;
-        }
-        /* Add RTL utility for .rtl:mr-3 */
-        [dir="rtl"] .rtl\:mr-3 { margin-right: 0.75rem !important; }
-        [dir="rtl"] .rtl\:ml-0 { margin-left: 0 !important; }
-        .icon-gap { margin-left: 1.25rem; }
-        [dir="rtl"] .icon-gap { margin-left: 0; margin-right: 1.25rem; }
-        .form-input label.floating-label[for="subject"] {
-            right: 2.5rem; /* Make room for the dropdown arrow */
-        }
-        /* Fix select dropdown appearance in dark mode */
-        .form-input select {
-            background-color: #fff;
-            color: #1e293b;
-        }
-        .dark .form-input select {
+        .dark .bg-white {
             background-color: #1e293b;
-            color: #e2e8f0;
-        }
-        /* Enhanced dropdown menu options */
-        .form-input select option {
-            background-color: #fff;
-            color: #1e293b;
-            padding: 8px 12px;
-        }
-        .dark .form-input select option {
-            background-color: #334155;
-            color: #e2e8f0;
-            padding: 8px 12px;
         }
         
-        /* Subject dropdown specific styling */
-        .form-input select#subject {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
+        .dark .text-gray-800 {
+            color: #e2e8f0;
         }
         
-        .dark .form-input select#subject {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        .dark .text-gray-600 {
+            color: #94a3b8;
         }
-
-        /* Enhanced form styles */
-        .form-input input:focus,
-        .form-input textarea:focus,
-        .form-input select:focus {
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        
+        .dark .text-gray-900 {
+            color: #f1f5f9;
         }
-
-        /* Error state styles */
-        .border-red-500 {
-            border-color: #ef4444 !important;
+        
+        .dark .border-gray-100 {
+            border-color: #334155;
         }
-
-        .ring-red-200 {
-            box-shadow: 0 0 0 4px rgba(254, 202, 202, 0.3) !important;
-        }
-
-        /* Form input hover effects */
-        .form-input:hover input,
-        .form-input:hover textarea,
-        .form-input:hover select {
-            border-color: #cbd5e1;
-        }
-
-        .dark .form-input:hover input,
-        .dark .form-input:hover textarea,
-        .dark .form-input:hover select {
+        
+        .dark .border-gray-300 {
             border-color: #475569;
         }
-
-        /* Character counter styles */
-        .char-counter {
-            transition: color 0.3s ease;
+        
+        .dark .bg-gray-50 {
+            background-color: #334155;
         }
-
-        .char-counter.warning {
-            color: #f59e0b;
+        
+        .dark .hover\:bg-gray-100:hover {
+            background-color: #475569;
         }
-
-        .char-counter.danger {
-            color: #ef4444;
+        
+        /* Mobile hamburger menu */
+        .hamburger-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
         }
-
-        /* Success message animation */
-        @keyframes slideInFromTop {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        .hamburger-menu.open {
+            right: 0;
         }
-
-        .success-animation {
-            animation: slideInFromTop 0.5s ease-out;
-        }
-
-        /* Loading spinner */
-        .fa-spinner {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Modern gradient shimmer underline and glow for navbar links */
-        .nav-link-underline {
-            position: relative;
-            overflow: hidden;
-        }
-        .nav-link-underline::after {
-            content: '';
-            position: absolute;
+        
+        .hamburger-overlay {
+            position: fixed;
+            top: 0;
             left: 0;
-            bottom: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 50%, #6366f1 100%);
-            background-size: 200% 100%;
-            background-position: 0% 50%;
-            border-radius: 2px;
-            transition: width 0.35s cubic-bezier(0.4,0,0.2,1), background-position 0.7s cubic-bezier(0.4,0,0.2,1);
-        }
-        .nav-link-underline:hover::after, .nav-link-underline.active::after {
             width: 100%;
-            background-position: 100% 50%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
         }
-        .btn-animated {
-            transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), box-shadow 0.22s cubic-bezier(0.4,0,0.2,1), background 0.18s cubic-bezier(0.4,0,0.2,1);
+        
+        .hamburger-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
-        .btn-animated:hover, .btn-animated:focus {
-            transform: translateY(-4px) scale(1.11) rotate(-1deg);
-            box-shadow: 0 8px 32px 0 rgba(59,130,246,0.22), 0 2px 8px 0 rgba(99,102,241,0.13);
-            background: rgba(37,99,235,0.10);
+        
+        /* Language toggle */
+        .language-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: none;
+            z-index: 1001;
+        }
+        
+        .language-dropdown.active {
+            display: block;
+        }
+        
+        .language-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .language-option:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Dark mode toggle button */
+        .dark-mode-toggle {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .dark .dark-mode-toggle {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .hamburger-menu {
+                width: 100%;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-gray-200 transition-colors duration-300">
-    <!-- Simple Header with Logo -->
-    <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-sm">
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm dark:bg-gray-900/90">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
+            <div class="flex justify-between items-center h-16">
                 <!-- Logo -->
-                <div class="flex-shrink-0 flex items-center">
+                <div class="flex items-center space-x-2">
                     <a href="index.html" class="flex items-center space-x-2">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 flex items-center justify-center">
                             <span class="text-white font-bold text-xl">DH</span>
                         </div>
                         <span class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Phone</span>
                     </a>
                 </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">Home</a>
+                    <a href="porduct.html" class="text-gray-600 hover:text-blue-600 transition-colors dark:text-gray-300 dark:hover:text-blue-400">Products</a>
+                    <a href="Contact.html" class="text-blue-600 font-semibold dark:text-blue-400">Contact</a>
+                    
+                    <!-- Dark Mode Toggle -->
+                    <button id="dark-mode-toggle" class="dark-mode-toggle">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:inline"></i>
+                        <span class="hidden sm:inline">Dark Mode</span>
+                    </button>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button id="hamburger-btn" class="md:hidden w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div id="hamburger-overlay" class="hamburger-overlay"></div>
+    <div id="hamburger-menu" class="hamburger-menu">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-white text-xl font-bold">DH Phone</h3>
+                <button id="close-menu" class="text-white text-2xl">&times;</button>
+            </div>
+
+            <nav class="mb-8">
+                <a href="index.html" class="block text-white py-3 border-b border-white/20">🏠 Home</a>
+                <a href="porduct.html" class="block text-white py-3 border-b border-white/20">📱 Products</a>
+                <a href="Contact.html" class="block text-white py-3">📞 Contact</a>
+            </nav>
+            
+            <!-- Dark Mode Toggle in Mobile Menu -->
+            <div class="mb-6">
+                <button id="mobile-dark-mode-toggle" class="w-full bg-white/20 text-white py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-white/30 transition-colors">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:inline"></i>
+                    <span>Toggle Dark Mode</span>
+                </button>
+            </div>
+            
+            <div class="mt-auto">
+                <div class="relative">
+                    <button id="language-toggle" class="language-toggle">
+                        <span>🌐 English</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="language-dropdown" class="language-dropdown">
+                        <div class="language-option" data-lang="en">🇺🇸 English</div>
+                        <div class="language-option" data-lang="fr">🇫🇷 Français</div>
+                        <div class="language-option" data-lang="ar">🇸🇦 العربية</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Hero Section -->
-        <section class="text-center mb-16 animate-fade-in">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4" data-en="Contact Us" data-fr="Contactez-nous" data-ar="اتصل بنا">Contact Us</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto" data-en="We're here to help! Reach out to our team for any questions or inquiries." data-fr="Nous sommes là pour vous aider ! Contactez notre équipe pour toute question ou demande." data-ar="نحن هنا لمساعدتك! تواصل مع فريقنا لأي استفسارات أو أسئلة.">We're here to help! Reach out to our team for any questions or inquiries.</p>
+        <!-- Page Title -->
+        <section class="text-center mb-12 animate-fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Contact Us
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
+                Get in touch with us for any questions, support, or inquiries
+            </p>
         </section>
 
-        <!-- Contact Methods -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            <!-- Phone -->
-            <div class="contact-card bg-white dark:bg-slate-700 p-6 rounded-xl shadow-md border border-gray-200 dark:border-slate-600 hover:border-primary-light dark:hover:border-primary-dark transition-all animate-slide-up">
-                <div class="w-12 h-12 bg-primary-light/10 dark:bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-                    <i class="fas fa-phone text-primary-light dark:text-primary-dark text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2" data-en="Call Us" data-fr="Appelez-nous" data-ar="اتصل بنا">Call Us</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-4" data-en="Available 24/7 for your convenience" data-fr="Disponible 24h/24 pour votre commodité" data-ar="متاح على مدار الساعة لراحتك">Available 24/7 for your convenience</p>
-                <a href="tel:0559364881" class="text-primary-light dark:text-primary-dark font-medium hover:underline flex items-center">
-                    <span>0559364881</span>
-                </a>
-            </div>
-
-            <!-- Email -->
-            <div class="contact-card bg-white dark:bg-slate-700 p-6 rounded-xl shadow-md border border-gray-200 dark:border-slate-600 hover:border-primary-light dark:hover:border-primary-dark transition-all animate-slide-up" style="animation-delay: 0.1s;">
-                <div class="w-12 h-12 bg-primary-light/10 dark:bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-                    <i class="fas fa-envelope text-primary-light dark:text-primary-dark text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2" data-en="Email Us" data-fr="Envoyez-nous un email" data-ar="راسلنا عبر البريد">Email Us</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-4" data-en="We'll respond within 24 hours" data-fr="Nous répondrons dans les 24 heures" data-ar="سوف نرد في غضون 24 ساعة">We'll respond within 24 hours</p>
-                <a href="email-coming-soon.html" class="text-primary-light dark:text-primary-dark font-medium hover:underline flex items-center">
-                    <span>contact@dhphone.com</span>
-                </a>
-            </div>
-
-            <!-- WhatsApp -->
-            <div class="contact-card bg-white dark:bg-slate-700 p-6 rounded-xl shadow-md border border-gray-200 dark:border-slate-600 hover:border-primary-light dark:hover:border-primary-dark transition-all animate-slide-up" style="animation-delay: 0.2s;">
-                <div class="w-12 h-12 bg-primary-light/10 dark:bg-primary-dark/10 rounded-full flex items-center justify-center mb-4">
-                    <i class="fab fa-whatsapp text-primary-light dark:text-primary-dark text-xl"></i>
-                </div>
-                <h3 class="text-xl font-semibold mb-2" data-en="Chat on WhatsApp" data-fr="Discuter sur WhatsApp" data-ar="محادثة عبر واتساب">Chat on WhatsApp</h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-4" data-en="Instant messaging support" data-fr="Support par messagerie instantanée" data-ar="دعم عبر المراسلة الفورية">Instant messaging support</p>
-                <a href="https://api.whatsapp.com/message/UDDWXQWO7GXJC1?autoload=1&app_absent=0" target="_blank" class="text-primary-light dark:text-primary-dark font-medium hover:underline flex items-center">
-                    <span data-en="Start Chat" data-fr="Commencer la discussion" data-ar="ابدأ المحادثة">Start Chat</span>
-                    <i class="fas fa-external-link-alt ml-2 text-xs"></i>
-                </a>
-            </div>
-        </section>
-
+        <!-- Contact Form and Info -->
+        <div class="grid lg:grid-cols-2 gap-12">
         <!-- Contact Form -->
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             <div class="animate-fade-in">
-                <h2 class="text-3xl font-bold mb-2 bg-gradient-to-r from-primary-light to-primary-dark text-transparent bg-clip-text" data-en="Send Us a Message" data-fr="Envoyez-nous un message" data-ar="أرسل لنا رسالة">Send Us a Message</h2>
-                <p class="text-gray-600 dark:text-gray-400 mb-8" data-en="Fill out the form below and we'll get back to you as soon as possible." data-fr="Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible." data-ar="املأ النموذج أدناه وسنرد عليك في أقرب وقت ممكن.">Fill out the form below and we'll get back to you as soon as possible.</p>
-                
-                <form class="space-y-6" id="contactForm">
-                    <!-- Name Input -->
-                    <div class="form-input relative group">
-                        <input type="text" id="name" name="name" class="block w-full px-4 py-4 pt-6 bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-500 rounded-xl focus:ring-4 focus:ring-primary-light/20 dark:focus:ring-primary-dark/20 focus:border-primary-light dark:focus:border-primary-dark transition-all duration-300 peer placeholder-transparent" placeholder=" " required>
-                        <label for="name" class="floating-label absolute left-4 top-4 text-gray-500 dark:text-gray-300 pointer-events-none transition-all duration-300 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark" data-en="Full Name" data-fr="Nom complet" data-ar="الاسم الكامل">Full Name</label>
-                        <div class="absolute right-4 top-4 text-gray-400 dark:text-gray-400 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark transition-colors duration-300">
-                            <i class="fas fa-user"></i>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Send us a Message</h2>
+                    <form id="contact-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">First Name</label>
+                            <input type="text" name="firstName" required class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                         </div>
-                        <p class="mt-2 text-sm text-red-600 hidden flex items-center gap-2" id="nameError">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span data-en="Please enter your full name" data-fr="Veuillez entrer votre nom complet" data-ar="يرجى إدخال اسمك الكامل">Please enter your full name</span>
-                        </p>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
+                            <input type="text" name="lastName" required class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                        </div>
                     </div>
                     
-                    <!-- Email Input -->
-                    <div class="form-input relative group">
-                        <input type="email" id="email" name="email" class="block w-full px-4 py-4 pt-6 bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-500 rounded-xl focus:ring-4 focus:ring-primary-light/20 dark:focus:ring-primary-dark/20 focus:border-primary-light dark:focus:border-primary-dark transition-all duration-300 peer placeholder-transparent" placeholder=" " required>
-                        <label for="email" class="floating-label absolute left-4 top-4 text-gray-500 dark:text-gray-300 pointer-events-none transition-all duration-300 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark" data-en="Email Address" data-fr="Adresse e-mail" data-ar="عنوان البريد الإلكتروني">Email Address</label>
-                        <div class="absolute right-4 top-4 text-gray-400 dark:text-gray-400 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark transition-colors duration-300">
-                            <i class="fas fa-envelope"></i>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Email</label>
+                        <input type="email" name="email" required class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                         </div>
-                        <p class="mt-2 text-sm text-red-600 hidden flex items-center gap-2" id="emailError">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span data-en="Please enter a valid email address" data-fr="Veuillez entrer une adresse e-mail valide" data-ar="يرجى إدخال عنوان بريد إلكتروني صحيح">Please enter a valid email address</span>
-                        </p>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone</label>
+                        <input type="tel" name="phone" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
                     </div>
                     
-                    <!-- Subject Dropdown -->
-                    <div class="form-input relative group">
-                        <select id="subject" name="subject" class="block w-full px-4 py-4 pt-6 bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-500 rounded-xl focus:ring-4 focus:ring-primary-light/20 dark:focus:ring-primary-dark/20 focus:border-primary-light dark:focus:border-primary-dark transition-all duration-300 appearance-none cursor-pointer hover:border-gray-300 dark:hover:border-slate-400" required>
-                            <option value="" selected disabled hidden></option>
-                            <option value="support" data-en="🛠️ Technical Support" data-fr="🛠️ Support technique" data-ar="🛠️ الدعم التقني">🛠️ Technical Support</option>
-                            <option value="sales" data-en="💰 Sales Inquiry" data-fr="💰 Demande de vente" data-ar="💰 استفسار المبيعات">💰 Sales Inquiry</option>
-                            <option value="partnership" data-en="🤝 Partnership" data-fr="🤝 Partenariat" data-ar="🤝 شراكة">🤝 Partnership</option>
-                            <option value="feedback" data-en="💬 Feedback" data-fr="💬 Commentaires" data-ar="💬 ملاحظات">💬 Feedback</option>
-                            <option value="other" data-en="📝 Other" data-fr="📝 Autre" data-ar="📝 أخرى">📝 Other</option>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Subject</label>
+                        <select name="subject" required class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                            <option value="">Select a subject</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="product">Product Information</option>
+                            <option value="support">Technical Support</option>
+                            <option value="order">Order Status</option>
+                            <option value="other">Other</option>
                         </select>
-                        <label for="subject" class="floating-label absolute left-4 top-4 text-gray-500 dark:text-gray-300 pointer-events-none transition-all duration-300 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark" data-en="Subject" data-fr="Sujet" data-ar="الموضوع">Subject</label>
-                        <div class="absolute right-4 top-4 text-gray-400 dark:text-gray-400 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark transition-colors duration-300 pointer-events-none">
-                            <i class="fas fa-tag"></i>
-                        </div>
-                        <p class="mt-2 text-sm text-red-600 hidden flex items-center gap-2" id="subjectError">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span data-en="Please select a subject" data-fr="Veuillez sélectionner un sujet" data-ar="يرجى اختيار موضوع">Please select a subject</span>
-                        </p>
                     </div>
                     
-                    <!-- Message Textarea -->
-                    <div class="form-input relative group">
-                        <textarea id="message" name="message" rows="6" class="block w-full px-4 py-4 pt-6 bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-500 rounded-xl focus:ring-4 focus:ring-primary-light/20 dark:focus:ring-primary-dark/20 focus:border-primary-light dark:focus:border-primary-dark transition-all duration-300 peer placeholder-transparent resize-none" placeholder=" " required></textarea>
-                        <label for="message" class="floating-label absolute left-4 top-4 text-gray-500 dark:text-gray-300 pointer-events-none transition-all duration-300 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark" data-en="Your Message" data-fr="Votre message" data-ar="رسالتك">Your Message</label>
-                        <div class="absolute right-4 top-4 text-gray-400 dark:text-gray-400 group-focus-within:text-primary-light dark:group-focus-within:text-primary-dark transition-colors duration-300">
-                            <i class="fas fa-comment-alt"></i>
-                        </div>
-                        <div class="absolute bottom-2 right-4 text-xs text-gray-400 dark:text-gray-400">
-                            <span id="charCount">0</span>/500
-                        </div>
-                        <p class="mt-2 text-sm text-red-600 hidden flex items-center gap-2" id="messageError">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <span data-en="Please enter your message" data-fr="Veuillez entrer votre message" data-ar="يرجى إدخال رسالتك">Please enter your message</span>
-                        </p>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Message</label>
+                        <textarea name="message" rows="5" required class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"></textarea>
                     </div>
                     
-                    <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl hover:shadow-blue-500/25 transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 group" data-en="Send Message" data-fr="Envoyer le message" data-ar="إرسال الرسالة">
-                        <i class="fas fa-paper-plane group-hover:translate-x-1 transition-transform duration-300"></i>
-                        <span data-en="Send Message" data-fr="Envoyer le message" data-ar="إرسال الرسالة">Send Message</span>
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Send Message
                     </button>
                 </form>
-                
-                <!-- Success Message -->
-                <div id="contactSuccess" class="hidden mt-6 p-6 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 flex items-center gap-4 shadow-lg transition-all duration-500 opacity-0">
-                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center">
-                        <i class="fas fa-check-circle text-2xl text-green-600 dark:text-green-400"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold text-lg" data-en="Message Sent Successfully!" data-fr="Message envoyé avec succès !" data-ar="تم إرسال الرسالة بنجاح!">Message Sent Successfully!</h4>
-                        <p id="contactSuccessMsg" class="text-sm opacity-90" data-en="Thank you for your message! We will get back to you soon." data-fr="Merci pour votre message ! Nous vous répondrons bientôt." data-ar="شكراً لك على رسالتك! سنرد عليك قريباً.">Thank you for your message! We will get back to you soon.</p>
-                    </div>
                 </div>
             </div>
             
-            <!-- Map -->
+            <!-- Contact Information -->
             <div class="animate-fade-in" style="animation-delay: 0.2s;">
-                <h2 class="text-2xl font-bold mb-6" data-en="Our Location" data-fr="Notre emplacement" data-ar="موقعنا">Our Location</h2>
-                <div class="map-container h-[400px] w-full rounded-xl overflow-hidden shadow-md border border-gray-200 dark:border-slate-700">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d388.72921044564526!2d-0.19041955354081444!3d35.53112886572843!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd7e3d9d8913e5e9%3A0x463fa5ab4ea63ab3!2sDH%20phone!5e1!3m2!1sen!2sdz!4v1753707929797!5m2!1sen!2sdz" width="100%" height="100%" style="border:0; display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Get in Touch</h2>
+                    
+                    <div class="space-y-6">
+                    <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1 text-gray-900 dark:text-white">Address</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Algeria</p>
+                            <a href="https://www.google.com/maps/place/DH+phone/@35.531125,-0.190004,144m/data=!3m1!1e3!4m6!3m5!1s0xd7e3d9d8913e5e9:0x463fa5ab4ea63ab3!8m2!3d35.5311248!4d-0.1900038!16s%2Fg%2F11tnyjcw86?hl=en&entry=ttu&g_ep=EgoyMDI1MDcyMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" class="text-blue-600 hover:text-blue-800 transition-colors text-sm font-medium dark:text-blue-400 dark:hover:text-blue-300">View on Google Maps →</a>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-phone text-green-600"></i>
+                    </div>
+                    <div>
+                            <h3 class="font-semibold mb-1 text-gray-900 dark:text-white">Phone</h3>
+                            <p class="text-gray-600 dark:text-gray-300">0559364881</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-envelope text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1 text-gray-900 dark:text-white">Email</h3>
+                            <p class="text-gray-600 dark:text-gray-300">info@dhphone.com</p>
+                </div>
+            </div>
+            
+                    <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                        <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-clock text-yellow-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1 text-gray-900 dark:text-white">Business Hours</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Monday - Friday: 9:00 AM - 6:00 PM</p>
+                            <p class="text-gray-600 dark:text-gray-300">Saturday: 10:00 AM - 4:00 PM</p>
+                        </div>
+                    </div>
                 </div>
                 
-                
+                <!-- Social Media -->
+                <div class="mt-8">
+                    <h3 class="font-semibold mb-4 text-gray-900 dark:text-white">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center text-white hover:bg-pink-700 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://api.whatsapp.com/message/UDDWXQWO7GXJC1?autoload=1&app_absent=0" target="_blank" rel="noopener" class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white hover:bg-green-700 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="https://www.tiktok.com/@dh.phone2?_t=ZM-8yC4GUv4nyy&_r=1" target="_blank" rel="noopener" class="w-12 h-12 bg-black rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-.88-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- Footer -->
@@ -678,249 +461,205 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Initialize EmailJS
-        (function() {
-            emailjs.init("XSH4_e6mWOH_Hb-xl"); // Your EmailJS public key
-        })();
-
-        // Simple and working contact form
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Contact page loaded successfully');
+        // Telegram Bot Configuration
+        const TELEGRAM_BOT_TOKEN = '7933495075:AAH2tvwxLUsSXtM4UzkSgSq4cb65k6qhSEI';
+        const TELEGRAM_CHAT_ID = '-1002894581286';
+        
+        // Dark mode functionality
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
             
-            const contactForm = document.getElementById('contactForm');
-            const contactSuccess = document.getElementById('contactSuccess');
-            
-            // Initialize floating labels
-            initializeFloatingLabels();
-            
-            // Character counter
-            const messageTextarea = document.getElementById('message');
-            const charCount = document.getElementById('charCount');
-            
-            if (messageTextarea && charCount) {
-                messageTextarea.addEventListener('input', function() {
-                    const length = this.value.length;
-                    charCount.textContent = length;
-                    
-                    // Update counter color based on length
-                    charCount.className = 'char-counter';
-                    if (length > 400) {
-                        charCount.classList.add('danger');
-                    } else if (length > 300) {
-                        charCount.classList.add('warning');
-                    }
-                });
-            }
-            
-            // Form submission
-            if (contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    console.log('Form submitted');
-                    
-                    // Get form data
-                    const name = document.getElementById('name').value.trim();
-                    const email = document.getElementById('email').value.trim();
-                    const subject = document.getElementById('subject').value;
-                    const message = document.getElementById('message').value.trim();
-                    
-                    // Simple validation
-                    if (!name) {
-                        showError('name', 'Please enter your full name');
-                        return;
-                    }
-                    
-                    if (!email) {
-                        showError('email', 'Please enter your email address');
-                        return;
-                    }
-                    
-                    if (!email.includes('@')) {
-                        showError('email', 'Please enter a valid email address');
-                        return;
-                    }
-                    
-                    if (!subject) {
-                        showError('subject', 'Please select a subject');
-                        return;
-                    }
-                    
-                    if (!message || message.length < 10) {
-                        showError('message', 'Please enter a message (at least 10 characters)');
-                        return;
-                    }
-                    
-                    // Clear all errors
-                    clearAllErrors();
-                    
-                    // Show loading state
-                    const submitBtn = contactForm.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.innerHTML;
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Sending...</span>';
-                    
-                    // Prepare Telegram message
-                    const botToken = '7933495075:AAH2tvwxLUsSXtM4UzkSgSq4cb65k6qhSEI';
-                    // DH-PHONE group chat ID
-                    const chatId = '-1002894581286';
-                    const text = `New Contact Message:%0AName: ${name}%0AEmail: ${email}%0ASubject: ${subject}%0AMessage: ${message}`;
-                    const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${text}`;
-
-                    fetch(url, { method: 'GET' })
-                        .then(function(response) {
-                            if (response.ok) {
-                                // Reset form
-                                contactForm.reset();
-                                // Reset floating labels
-                                contactForm.querySelectorAll('.floating-label').forEach(label => {
-                                    label.classList.remove('active');
-                                });
-                                // Reset character counter
-                                if (charCount) charCount.textContent = '0';
-                                // Show success message
-                                contactSuccess.classList.remove('hidden');
-                                contactSuccess.classList.add('success-animation');
-                                setTimeout(() => {
-                                    contactSuccess.classList.add('opacity-100');
-                                    contactSuccess.classList.remove('opacity-0');
-                                }, 10);
-                                // Hide success message after 5 seconds
-                                setTimeout(() => {
-                                    contactSuccess.classList.remove('opacity-100');
-                                    contactSuccess.classList.add('opacity-0');
-                                    setTimeout(() => {
-                                        contactSuccess.classList.add('hidden');
-                                        contactSuccess.classList.remove('success-animation');
-                                    }, 500);
-                                }, 5000);
-                                // Show SweetAlert success
-                                if (typeof Swal !== 'undefined') {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Message Sent Successfully!',
-                                        text: 'Thank you for contacting us. We will get back to you soon.',
-                                        confirmButtonColor: '#3b82f6',
-                                        timer: 3000,
-                                        timerProgressBar: true
-                                    });
-                                }
-                                // Reset button
-                                submitBtn.disabled = false;
-                                submitBtn.innerHTML = originalText;
-                            } else {
-                                throw new Error('Telegram API returned error');
-                            }
-                        })
-                        .catch(function(error) {
-                            console.error('Telegram send failed:', error);
-                            // Reset button
-                            submitBtn.disabled = false;
-                            submitBtn.innerHTML = originalText;
-                            // Show error message
-                            if (typeof Swal !== 'undefined') {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Message Send Failed',
-                                    text: 'Sorry, there was an error sending your message. Please try again or contact us directly.',
-                                    confirmButtonColor: '#3b82f6'
-                                });
-                            }
-                        });
-                });
-                
-                console.log('Contact form event listener added successfully');
+            if (isDark) {
+                html.classList.remove('dark');
+                localStorage.setItem('darkMode', 'light');
             } else {
-                console.error('Contact form not found');
+                html.classList.add('dark');
+                localStorage.setItem('darkMode', 'dark');
             }
+        }
+        
+        // Load saved dark mode preference
+        const savedDarkMode = localStorage.getItem('darkMode');
+        if (savedDarkMode === 'dark' || (!savedDarkMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        // Dark mode toggle event listeners
+        document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        document.getElementById('mobile-dark-mode-toggle').addEventListener('click', toggleDarkMode);
+        
+        // Contact form handling with Telegram integration
+        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            // Helper functions
-            function showError(fieldId, message) {
-                const errorElement = document.getElementById(`${fieldId}Error`);
-                const inputElement = document.getElementById(fieldId);
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Format message for Telegram
+                const message = `📞 *New Contact Form Submission*
                 
-                if (errorElement && inputElement) {
-                    const span = errorElement.querySelector('span');
-                    if (span) span.textContent = message;
-                    errorElement.classList.remove('hidden');
-                    inputElement.classList.add('border-red-500', 'ring-2', 'ring-red-200');
-                    inputElement.focus();
+👤 *Name:* ${data.firstName} ${data.lastName}
+📧 *Email:* ${data.email}
+📱 *Phone:* ${data.phone || 'Not provided'}
+📋 *Subject:* ${data.subject}
+💬 *Message:*
+${data.message}
+
+⏰ *Submitted at:* ${new Date().toLocaleString()}`;
+                
+                // Send to Telegram
+                const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: message,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    // Show success message
+                    showNotification('✅ Message sent successfully! We will get back to you soon.', 'success');
+                    this.reset();
+                } else {
+                    throw new Error('Failed to send message to Telegram');
                 }
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showNotification('❌ Failed to send message. Please try again or contact us directly.', 'error');
+            } finally {
+                // Reset button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Notification function
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
             }
             
-            function clearAllErrors() {
-                document.querySelectorAll('[id$="Error"]').forEach(el => {
-                    el.classList.add('hidden');
-                });
-                
-                contactForm.querySelectorAll('input, textarea, select').forEach(el => {
-                    el.classList.remove('border-red-500', 'ring-2', 'ring-red-200');
-                });
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm transform transition-all duration-300 translate-x-full`;
+            
+            // Set styles based on type
+            if (type === 'success') {
+                notification.className += ' bg-green-500 text-white';
+            } else if (type === 'error') {
+                notification.className += ' bg-red-500 text-white';
+            } else {
+                notification.className += ' bg-blue-500 text-white';
             }
             
-            function initializeFloatingLabels() {
-                const formInputs = document.querySelectorAll('.form-input input, .form-input textarea, .form-input select');
-                
-                formInputs.forEach(input => {
-                    const label = input.nextElementSibling;
-                    if (label && label.classList.contains('floating-label')) {
-                        // Add event listeners
-                        input.addEventListener('focus', () => {
-                            label.classList.add('active');
-                        });
-                        
-                        input.addEventListener('blur', () => {
-                            if (!input.value || (input.tagName === 'SELECT' && input.value === '')) {
-                                label.classList.remove('active');
-                            }
-                        });
-                        
-                        input.addEventListener('input', () => {
-                            if (input.value || (input.tagName === 'SELECT' && input.value !== '')) {
-                                label.classList.add('active');
-                            } else {
-                                label.classList.remove('active');
-                            }
-                        });
-                    }
-                });
+            notification.innerHTML = `
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="mr-2">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                        <span>${message}</span>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.classList.add('translate-x-full');
+                    setTimeout(() => {
+                        if (notification.parentElement) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+
+        // Mobile menu functionality
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const hamburgerOverlay = document.getElementById('hamburger-overlay');
+        const closeMenu = document.getElementById('close-menu');
+        
+        function openMenu() {
+            hamburgerMenu.classList.add('open');
+            hamburgerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMenuFunc() {
+            hamburgerMenu.classList.remove('open');
+            hamburgerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        hamburgerBtn.addEventListener('click', openMenu);
+        closeMenu.addEventListener('click', closeMenuFunc);
+        hamburgerOverlay.addEventListener('click', closeMenuFunc);
+        
+        // Language toggle
+        const languageToggle = document.getElementById('language-toggle');
+        const languageDropdown = document.getElementById('language-dropdown');
+        const languageOptions = document.querySelectorAll('.language-option');
+        
+        languageToggle.addEventListener('click', () => {
+            languageDropdown.classList.toggle('active');
+        });
+        
+        languageOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                const lang = option.dataset.lang;
+                const langText = option.textContent.split(' ')[1];
+                languageToggle.querySelector('span').textContent = `🌐 ${langText}`;
+                languageDropdown.classList.remove('active');
+                localStorage.setItem('lang', lang);
+            });
+        });
+        
+        // Load saved language
+        const savedLang = localStorage.getItem('lang');
+        if (savedLang) {
+            const option = document.querySelector(`[data-lang="${savedLang}"]`);
+            if (option) {
+                const langText = option.textContent.split(' ')[1];
+                languageToggle.querySelector('span').textContent = `🌐 ${langText}`;
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!languageToggle.contains(e.target) && !languageDropdown.contains(e.target)) {
+                languageDropdown.classList.remove('active');
             }
         });
     </script>
-    <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const themeToggle = document.getElementById('dark-mode-toggle');
-  const html = document.documentElement;
-  const moonIcon = document.getElementById('moon-icon');
-  const sunIcon = document.getElementById('sun-icon');
-
-  function updateIcons() {
-    if (html.classList.contains('dark')) {
-      moonIcon.classList.add('hidden');
-      sunIcon.classList.remove('hidden');
-    } else {
-      moonIcon.classList.remove('hidden');
-      sunIcon.classList.add('hidden');
-    }
-  }
-
-  function toggleTheme() {
-    html.classList.toggle('dark');
-    localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
-    updateIcons();
-  }
-
-  if (themeToggle) themeToggle.addEventListener('click', toggleTheme);
-
-  // On page load, set theme and icon
-  if (localStorage.getItem('theme') === 'dark') {
-    html.classList.add('dark');
-  } else {
-    html.classList.remove('dark');
-  }
-  updateIcons();
-});
-</script>
 </body>
+</html>
 </html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify Integration Test</title>
+    
+    <!-- Tailwind CSS -->
+    <script>
+        window.tailwind = { config: { darkMode: 'class' } };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Shopify Configuration -->
+    <script src="shopify-config.js"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">Shopify Integration Test</h1>
+        
+        <div class="bg-white rounded-lg p-6 shadow-lg mb-6">
+            <h2 class="text-xl font-semibold mb-4">Configuration Status</h2>
+            <div id="config-result" class="mb-4"></div>
+            <div id="config-details" class="text-sm text-gray-600"></div>
+        </div>
+        
+        <div class="bg-white rounded-lg p-6 shadow-lg mb-6">
+            <h2 class="text-xl font-semibold mb-4">API Test</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Product ID:</label>
+                    <input type="text" id="product-id" placeholder="Enter product ID (e.g., 123456789)" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                    <p class="text-xs text-gray-500 mt-1">Enter a product ID from your Shopify store</p>
+                </div>
+                <button id="test-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    Test Shopify API
+                </button>
+                <div id="result" class="mt-4 p-4 bg-gray-100 rounded-lg hidden">
+                    <h3 class="font-semibold mb-2">API Response:</h3>
+                    <pre id="result-text" class="text-sm overflow-auto max-h-96"></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg p-6 shadow-lg">
+            <h2 class="text-xl font-semibold mb-4">Debug Information</h2>
+            <div id="debug-info" class="text-sm space-y-2">
+                <div>Loading debug information...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test configuration
+        function testConfig() {
+            const config = window.SHOPIFY_CONFIG;
+            const resultDiv = document.getElementById('config-result');
+            const detailsDiv = document.getElementById('config-details');
+            
+            if (config && config.storeUrl && config.accessToken) {
+                resultDiv.innerHTML = `
+                    <div class="text-green-600 font-semibold">✅ Configuration OK</div>
+                `;
+                detailsDiv.innerHTML = `
+                    <div><strong>Store URL:</strong> ${config.storeUrl}</div>
+                    <div><strong>Access Token:</strong> ${config.accessToken.substring(0, 10)}...</div>
+                    <div><strong>API Version:</strong> ${config.apiVersion}</div>
+                    <div><strong>Currency Rate:</strong> ${config.usdToDzdRate} USD to DZD</div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="text-red-600 font-semibold">❌ Configuration Error</div>
+                `;
+                detailsDiv.innerHTML = `
+                    <div>Please check shopify-config.js file</div>
+                    <div>Config object: ${JSON.stringify(config, null, 2)}</div>
+                `;
+            }
+        }
+
+        // Test Shopify API
+        async function testShopifyAPI() {
+            const productId = document.getElementById('product-id').value;
+            const resultDiv = document.getElementById('result');
+            const resultText = document.getElementById('result-text');
+            
+            if (!productId) {
+                alert('Please enter a product ID');
+                return;
+            }
+            
+            resultDiv.classList.remove('hidden');
+            resultText.textContent = 'Testing Shopify API...';
+            
+            try {
+                const config = window.SHOPIFY_CONFIG;
+                
+                if (!config || !config.storeUrl || !config.accessToken) {
+                    throw new Error('Shopify configuration is missing');
+                }
+                
+                const query = `
+                    query getProduct($id: ID!) {
+                        product(id: $id) {
+                            id
+                            title
+                            description
+                            tags
+                            images(first: 5) {
+                                edges {
+                                    node {
+                                        id
+                                        url
+                                        altText
+                                    }
+                                }
+                            }
+                            variants(first: 5) {
+                                edges {
+                                    node {
+                                        id
+                                        title
+                                        price {
+                                            amount
+                                            currencyCode
+                                        }
+                                        availableForSale
+                                    }
+                                }
+                            }
+                        }
+                    }
+                `;
+                
+                const url = `https://${config.storeUrl}/api/${config.apiVersion}/graphql.json`;
+                const variables = {
+                    id: `gid://shopify/Product/${productId}`
+                };
+                
+                console.log('🔗 API URL:', url);
+                console.log('📦 Variables:', variables);
+                
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-Shopify-Storefront-Access-Token': config.accessToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        variables: variables
+                    })
+                });
+
+                console.log('📡 Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+
+                const data = await response.json();
+                console.log('📦 Response data:', data);
+                
+                if (data.errors) {
+                    resultText.textContent = `❌ GraphQL Errors:\n${JSON.stringify(data.errors, null, 2)}`;
+                } else if (data.data && data.data.product) {
+                    const product = data.data.product;
+                    resultText.textContent = `✅ Success!\n\nProduct: ${product.title}\nDescription: ${product.description}\nTags: ${product.tags}\nImages: ${product.images.edges.length}\nVariants: ${product.variants.edges.length}\n\nFull Response:\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultText.textContent = `❌ Product not found\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+                }
+                
+            } catch (error) {
+                console.error('❌ API Error:', error);
+                resultText.textContent = `❌ Error: ${error.message}\n\nStack: ${error.stack}`;
+            }
+        }
+
+        // Debug information
+        function showDebugInfo() {
+            const debugDiv = document.getElementById('debug-info');
+            const config = window.SHOPIFY_CONFIG;
+            
+            debugDiv.innerHTML = `
+                <div><strong>Window SHOPIFY_CONFIG:</strong> ${config ? '✅ Available' : '❌ Missing'}</div>
+                <div><strong>Config Type:</strong> ${typeof config}</div>
+                <div><strong>Store URL:</strong> ${config?.storeUrl || 'Not set'}</div>
+                <div><strong>Access Token:</strong> ${config?.accessToken ? '✅ Set' : '❌ Missing'}</div>
+                <div><strong>API Version:</strong> ${config?.apiVersion || 'Not set'}</div>
+                <div><strong>Browser:</strong> ${navigator.userAgent}</div>
+                <div><strong>Console:</strong> Check browser console for detailed logs</div>
+            `;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing test page...');
+            testConfig();
+            showDebugInfo();
+            document.getElementById('test-btn').addEventListener('click', testShopifyAPI);
+        });
+    </script>
+</body>
+</html> 
